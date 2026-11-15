@@ -1,0 +1,5167 @@
+/* ============================================================
+   Aula UNALM — tema oscuro con efecto "liquid glass"
+   Orden del archivo:
+     0. Fuente        6. Bloques laterales (Navegación)
+     1. Variables     7. Pestañas acopladas (dock)
+     2. Base          8. Menú del perfil
+     3. Barra superior 9. Pie de página
+     4. Banner        10. Modal de cursos fusionados
+     5. Tarjetas      11. Animación de entrada
+   ============================================================ */
+
+
+/* ============================================================
+   0. FUENTE (Lexend, empaquetada dentro de la extensión)
+   Antes la cargábamos con @import desde Google Fonts. Ahora el
+   archivo vive en /fonts, así no depende de internet ni de que
+   la página permita cargar fuentes externas.
+   "__MSG_@@extension_id__" lo reemplaza Chrome por el ID real de
+   tu extensión.
+   ============================================================ */
+@font-face {
+  font-family: 'Lexend';
+  src: url('chrome-extension://__MSG_@@extension_id__/fonts/lexend-latin-wght-normal.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+
+/* ============================================================
+   1. VARIABLES — cambia un color aquí y cambia en todo el sitio
+   ============================================================ */
+:root {
+  --md-primary: #1F9D77;       /* verde institucional */
+  --md-surface: #0D0D0D;       /* fondo general */
+  --md-text: #F5F5F5;          /* texto principal */
+  --md-text-soft: #B0B0B0;     /* texto secundario */
+  --md-accent: #7FE8C8;        /* verde menta: links y títulos de curso */
+  --md-radius: 20px;
+}
+
+
+/* ============================================================
+   2. BASE — DEGRADADO CONTINUO EN BODY (Cero cortes, cero rayas)
+   El degradado verde difuminado vive directamente en <body>.
+   Al ser el fondo de toda la página, es FÍSICAMENTE IMPOSIBLE
+   que haya una raya o corte entre el banner y el contenido.
+   Fluye de verde esmeralda brillante a negro profundo.
+   ============================================================ */
+html,
+body,
+body.theme-green3,
+body#page-site-index {
+  background-color: #070B09 !important;
+  background-image:
+    /* Nube verde de luz superior continua (idéntica a la referencia) */
+    radial-gradient(ellipse 140% 620px at 50% -60px, rgba(31, 157, 119, 0.55) 0%, rgba(18, 125, 90, 0.35) 35%, rgba(10, 65, 46, 0.15) 60%, transparent 100%),
+    /* Difuminado suave vertical de verde a negro sin ningún salto */
+    linear-gradient(180deg, rgba(24, 135, 96, 0.4) 0%, rgba(15, 85, 60, 0.22) 180px, rgba(10, 45, 32, 0.1) 340px, #070B09 560px) !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important;
+  background-size: 100% 600px, 100% 600px !important;
+  color: var(--md-text) !important;
+  font-family: 'Segoe UI', Roboto, -apple-system, sans-serif !important;
+  min-height: 100vh !important;
+}
+
+h1, h2, h3, .page-header-headings {
+  color: var(--md-text) !important;
+  font-weight: 600 !important;
+}
+
+html body.theme-green3 .btn:not(.btn-link),
+html body.theme-green3 a.btn:not(.btn-link),
+html body.theme-green3 button:not(.unalm-window-toggle):not(.unalm-unit-toggle):not(.btn-link):not(.unalm-pass-toggle):not(.unalm-view-btn):not(.unalm-card-action-btn),
+html body.theme-green3 input[type="submit"],
+html body.theme-green3 input[type="button"],
+html body.theme-green3 input[type="reset"],
+html body.theme-green3 .singlebutton input[type="submit"],
+html body.theme-green3 .singlebutton button:not(.btn-link),
+.btn:not(.btn-link),
+input[type="submit"] {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.9) 0%, rgba(15, 92, 69, 0.95) 100%) !important;
+  background-color: #1F9D77 !important;
+  background-image: linear-gradient(135deg, rgba(31, 157, 119, 0.9) 0%, rgba(15, 92, 69, 0.95) 100%) !important;
+  background-repeat: no-repeat !important;
+  background-position: 0 0 !important;
+  color: #ffffff !important;
+  text-shadow: none !important;
+  border: 1px solid rgba(127, 232, 200, 0.38) !important;
+  border-top: 1px solid rgba(127, 232, 200, 0.65) !important;
+  border-radius: 14px !important;
+  padding: 10px 22px !important;
+  height: auto !important;
+  min-height: 38px !important;
+  line-height: 1.35 !important;
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 16px rgba(31, 157, 119, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  cursor: pointer !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+html body.theme-green3 .btn:not(.btn-link):hover,
+html body.theme-green3 a.btn:not(.btn-link):hover,
+html body.theme-green3 button:not(.unalm-window-toggle):not(.unalm-unit-toggle):not(.btn-link):not(.unalm-pass-toggle):not(.unalm-view-btn):not(.unalm-card-action-btn):hover,
+html body.theme-green3 input[type="submit"]:hover,
+html body.theme-green3 input[type="button"]:hover,
+html body.theme-green3 .singlebutton input[type="submit"]:hover,
+html body.theme-green3 .singlebutton button:not(.btn-link):hover,
+.btn:not(.btn-link):hover,
+input[type="submit"]:hover {
+  background: linear-gradient(135deg, #24b488 0%, #157a5b 100%) !important;
+  background-image: linear-gradient(135deg, #24b488 0%, #157a5b 100%) !important;
+  background-position: 0 0 !important;
+  color: #ffffff !important;
+  border-color: rgba(127, 232, 200, 0.72) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45), 0 0 22px rgba(31, 157, 119, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Inputs de texto y selectores globales (adiós cajas blancas de Moodle) */
+html body.theme-green3:not(#page-login-index) input[type="text"],
+html body.theme-green3:not(#page-login-index) input[type="search"],
+html body.theme-green3:not(#page-login-index) input[type="email"],
+html body.theme-green3:not(#page-login-index) input[type="url"],
+html body.theme-green3:not(#page-login-index) input[type="number"],
+html body.theme-green3:not(#page-login-index) textarea,
+html body.theme-green3:not(#page-login-index) select {
+  background: rgba(255, 255, 255, 0.06) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  background-image: none !important;
+  color: #f8fafc !important;
+  text-shadow: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+  border-radius: 12px !important;
+  padding: 8px 14px !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+  outline: none !important;
+  transition: all 0.2s ease !important;
+}
+
+html body.theme-green3:not(#page-login-index) input[type="text"]:focus,
+html body.theme-green3:not(#page-login-index) input[type="search"]:focus,
+html body.theme-green3:not(#page-login-index) textarea:focus,
+html body.theme-green3:not(#page-login-index) select:focus {
+  border-color: #7fe8c8 !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 0 0 14px rgba(127, 232, 200, 0.25) !important;
+}
+
+/* Bootstrap deja padding a los lados de #page; lo quitamos
+   para que el banner llegue de borde a borde */
+#page.container-fluid {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+
+/* ============================================================
+   3. BARRA SUPERIOR (idioma, mensajes, foto de perfil)
+   Completamente transparente: flota sobre la nube verde
+   ============================================================ */
+.navbar,
+.navbar-inner,
+header.navbar,
+body.theme-green3 .navbar,
+body.theme-green3 header.navbar,
+body.theme-green3 .navbar-inner {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-bottom: none !important;
+  z-index: 10 !important;
+}
+
+.navbar .nav-link,
+.navbar a {
+  color: var(--md-text) !important;
+}
+
+
+/* ============================================================
+   4. BANNER VERDE — INTEGRACIÓN TOTAL SIN RAYAS NI CORTES
+   Totalmente transparente, anula las olas verdes del tema nativo
+   y deja ver la nube verde difuminada del <body>.
+   ============================================================ */
+#page,
+#page-content,
+#region-main,
+#page-header,
+#page #page-header,
+.page-context-header,
+.page-header-headings,
+#page-navbar,
+#course-header,
+body.theme-green3 #page,
+body.theme-green3 #page-header,
+body.theme-green3 #page #page-header,
+body.theme-green3 #page-content {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+#page #page-header {
+  position: relative !important;
+  overflow: visible !important;
+  min-height: 180px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+  margin: 0 !important;
+  padding: 54px 24px 28px !important;
+}
+
+/* Eliminar cualquier pseudoelemento o máscara que cause líneas o muestre imágenes viejas */
+#page #page-header::before,
+#page #page-header::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* El tema posiciona el título con position:absolute; lo devolvemos
+   al flujo normal para que respete el flex del banner */
+#page #page-header .page-context-header,
+#page #page-header .page-header-headings {
+  position: static !important;
+  margin: 0 !important;
+  width: 100%;
+}
+
+#page #page-header h1 {
+  position: relative;
+  z-index: 2;
+  color: #fff !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-size: 2.75rem !important;
+  font-weight: 700 !important;
+}
+
+/* --- Ruta de navegación (breadcrumb) como "chip" de vidrio --- */
+#page-header .breadcrumb-nav {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 20px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+}
+
+#page-header .breadcrumb {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#page-header .breadcrumb li {
+  display: flex;
+  align-items: center;
+}
+
+/* Niveles intermedios: blanco atenuado */
+#page-header .breadcrumb a,
+#page-header .breadcrumb > li > span:not(.divider):not(.arrow) {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+}
+
+#page-header .breadcrumb a:hover {
+  color: #fff !important;
+  text-decoration: underline;
+}
+
+/* Último nivel (dónde estás ahora): destacado */
+#page-header .breadcrumb li:last-child a,
+#page-header .breadcrumb li:last-child span[itemprop="title"] {
+  color: var(--md-accent) !important;
+  font-weight: 700 !important;
+}
+
+/* Flechitas separadoras: apagadas */
+#page-header .breadcrumb .divider,
+#page-header .breadcrumb .arrow {
+  color: rgba(255, 255, 255, 0.35) !important;
+  margin: 0 8px;
+  font-size: 0.75rem;
+}
+
+
+/* ============================================================
+   5. TARJETAS DE CURSO
+   position:relative + overflow:hidden contienen el brillo
+   diagonal (::before) DENTRO de la tarjeta.
+   ============================================================ */
+.coursebox {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: rgba(31, 157, 119, 0.08) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  /* Borde más brillante arriba y a la izquierda = luz desde esa esquina */
+  border: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: var(--md-radius) !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 0 40px rgba(255, 255, 255, 0.03) !important;
+  padding: 16px 20px !important;
+  margin-bottom: 16px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.coursebox:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 0 40px rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Franja de luz diagonal que cruza el vidrio */
+.coursebox::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 55%,
+    transparent 80%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Todo el contenido de la tarjeta queda por encima del brillo */
+.coursebox > * {
+  position: relative;
+  z-index: 1;
+}
+
+.coursebox .coursename {
+  margin: 0 !important;
+}
+
+.coursebox .coursename a {
+  color: var(--md-accent) !important;
+  font-weight: 600;
+}
+
+.coursebox .teachers a {
+  color: var(--md-text-soft) !important;
+}
+
+
+/* ============================================================
+   6. VENTANA LIQUID GLASS DE NAVEGACIÓN (Estilo OS Widget)
+   Inspirado en interfaces modernas con vidrio escarchado,
+   bordes de refracción de luz, titlebar con controles de ventana
+   y botones interactivos tipo "cards/pills" pulidos.
+   ============================================================ */
+.block {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Contenedor principal de la ventana de navegación */
+.block_navigation,
+.unalm-glass-window {
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: 26px !important;
+  background: linear-gradient(155deg, rgba(18, 25, 26, 0.78) 0%, rgba(10, 16, 15, 0.88) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.38) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.24) !important;
+  box-shadow:
+    0 24px 60px -12px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 0 35px rgba(255, 255, 255, 0.02) !important;
+  margin-bottom: 24px !important;
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease !important;
+}
+
+/* Franja de luz diagonal característica de Liquid Glass */
+.block_navigation::before,
+.unalm-glass-window::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    transparent 15%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0.09) 48%,
+    rgba(255, 255, 255, 0.04) 55%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ocultar elementos obsoletos del tema base de Moodle */
+.block_navigation .header,
+#inst24 .header {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.block_navigation .header .title,
+.block_navigation .header .block_action,
+.block_navigation .header::after,
+.block_navigation .header h2,
+#instance-24-header {
+  display: none !important;
+}
+
+/* Enlaces y textos de navegación: NUNCA en azul de Moodle */
+.block_navigation,
+.block_navigation *,
+.block_navigation a,
+.block_navigation span {
+  color: #e2e8f0 !important;
+  text-decoration: none !important;
+}
+
+/* Barra superior de la ventana (Titlebar estilo OS / Liquid Glass) */
+.unalm-window-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 14px 18px 12px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  position: relative;
+  z-index: 2;
+}
+
+.unalm-window-dots {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+}
+
+.unalm-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.85;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.unalm-dot:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.dot-close { background: #ff5f56; box-shadow: 0 0 8px rgba(255, 95, 86, 0.5); }
+.dot-min   { background: #ffbd2e; box-shadow: 0 0 8px rgba(255, 189, 46, 0.5); }
+.dot-max   { background: #27c93f; box-shadow: 0 0 8px rgba(39, 201, 63, 0.5); }
+
+.unalm-window-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: #fff !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.unalm-window-title .unalm-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--md-accent);
+}
+
+.unalm-window-toggle {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  width: 26px !important;
+  height: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  color: var(--md-text-soft) !important;
+  transition: all 0.2s ease !important;
+}
+
+.unalm-window-toggle:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.unalm-window-toggle .chevron {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.3s ease;
+}
+
+.block_navigation.unalm-collapsed .unalm-window-toggle .chevron {
+  transform: rotate(-90deg);
+}
+
+.block_navigation.unalm-collapsed .content {
+  display: none !important;
+}
+
+/* Área de contenido del bloque */
+.block_navigation .content {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 16px !important;
+  position: relative;
+  z-index: 2;
+  max-height: 520px;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* Scrollbar moderno ultra delgado para la ventana */
+.block_navigation .content::-webkit-scrollbar {
+  width: 5px;
+}
+.block_navigation .content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+.block_navigation .content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+}
+.block_navigation .content::-webkit-scrollbar-thumb:hover {
+  background: rgba(127, 232, 200, 0.4);
+}
+
+/* Limpieza radical de listas de Moodle (fuera viñetas, líneas feas e indentaciones) */
+.block_navigation .block_tree,
+.block_navigation .block_tree ul,
+.block_navigation .block_tree li {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.block_navigation .block_tree li:before,
+.block_navigation .block_tree p:before {
+  display: none !important;
+}
+
+.block_navigation .tree_item {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Títulos de sección dentro de la ventana ("Mis cursos", "Páginas del sitio") */
+.unalm-nav-section-title,
+.block_navigation .tree_item.branch > span {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 0.76rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: var(--md-accent) !important;
+  font-weight: 700 !important;
+  margin: 14px 6px 8px !important;
+  padding-bottom: 4px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.unalm-nav-section-title .unalm-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0.9;
+}
+
+/* --- BOTONES MODERNOS: PILLS / CARDS (Área personal, Página principal, etc.) --- */
+.unalm-nav-pill,
+.block_navigation .content a,
+.block_navigation .tree_item a,
+.block_navigation .content a.unalm-nav-pill {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 9px 13px !important;
+  margin-bottom: 6px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 14px !important;
+  color: #e2e8f0 !important;
+  font-size: 0.88rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.unalm-nav-pill:hover,
+.block_navigation .content a.unalm-nav-pill:hover {
+  background: rgba(31, 157, 119, 0.22) !important;
+  border-color: rgba(127, 232, 200, 0.38) !important;
+  color: #fff !important;
+  transform: translateX(4px) translateY(-1px) !important;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Íconos vectoriales SVG en los botones */
+.unalm-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--md-accent);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.unalm-nav-pill:hover .unalm-icon {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* Destacado especial para "Área personal" */
+.unalm-nav-pill.pill-personal {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.18) 0%, rgba(20, 30, 28, 0.4) 100%) !important;
+  border: 1px solid rgba(127, 232, 200, 0.28) !important;
+  border-top: 1px solid rgba(127, 232, 200, 0.45) !important;
+}
+
+.unalm-nav-pill.pill-personal:hover {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.35) 0%, rgba(25, 45, 40, 0.6) 100%) !important;
+  border-color: rgba(127, 232, 200, 0.6) !important;
+}
+
+/* Tarjeta individual de curso en la lista de navegación */
+.unalm-course-item-pill,
+.block_navigation .content a.unalm-course-item-pill {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  margin-bottom: 5px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.unalm-course-item-pill:hover,
+.block_navigation .content a.unalm-course-item-pill:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(127, 232, 200, 0.3) !important;
+  transform: translateX(3px) !important;
+}
+
+.unalm-course-meta {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  min-width: 0 !important;
+}
+
+.unalm-course-name {
+  color: #f1f5f9 !important;
+  font-size: 0.83rem !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.unalm-course-code {
+  color: var(--md-text-soft) !important;
+  font-size: 0.7rem !important;
+  font-family: monospace !important;
+  opacity: 0.8;
+}
+
+/* Badges de Teoría y Práctica */
+.unalm-course-badge {
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 6px !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.unalm-course-badge.badge-theory {
+  background: rgba(31, 157, 119, 0.25) !important;
+  color: #7fe8c8 !important;
+  border: 1px solid rgba(127, 232, 200, 0.4) !important;
+}
+
+.unalm-course-badge.badge-practice {
+  background: rgba(56, 189, 248, 0.2) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+}
+
+
+
+/* ============================================================
+   7. PESTAÑAS ACOPLADAS (la franja vertical "Archivos privados")
+   ============================================================ */
+#dock {
+  background: transparent !important;
+}
+
+.dockeditem,
+.dockedtitle {
+  background: rgba(31, 157, 119, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--md-text) !important;
+}
+
+.dockeditem:hover,
+.dockedtitle:hover {
+  background: rgba(31, 157, 119, 0.3) !important;
+}
+
+
+/* ============================================================
+   8. MENÚ DESPLEGABLE DEL PERFIL
+   ============================================================ */
+.dropdown-user-menu {
+  background: rgba(20, 20, 20, 0.85) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  padding: 6px !important;
+}
+
+.dropdown-user-menu li a {
+  display: block;
+  padding: 8px 14px !important;
+  border-radius: 8px;
+  color: var(--md-text) !important;
+  transition: background 0.15s;
+}
+
+.dropdown-user-menu li a:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+
+/* ============================================================
+   9. PIE DE PÁGINA
+   ============================================================ */
+#page-footer {
+  background: transparent !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 16px 20px !important;
+}
+
+#page-footer,
+#page-footer .logininfo {
+  color: var(--md-text-soft) !important;
+}
+
+#page-footer a {
+  color: var(--md-accent) !important;
+}
+
+#page-footer a:hover {
+  text-decoration: underline;
+}
+
+
+/* ============================================================
+   10. MODAL DE CURSOS FUSIONADOS (teoría / práctica)
+   Lo crea content.js. Vive directo en <body>, fuera de las
+   tarjetas, por eso ningún overflow ni z-index lo corta.
+   ============================================================ */
+.modal-overlay {
+  position: fixed;          /* "fixed" = pegado a la ventana, cubre todo */
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(24px) saturate(150%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-box {
+  min-width: 320px;
+  max-width: 90vw;
+  padding: 28px 32px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--md-radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  transform: scale(0.92);
+  transition: transform 0.25s ease;
+}
+
+.modal-overlay.active .modal-box {
+  transform: scale(1);
+}
+
+.modal-title {
+  margin: 0 0 16px 0;
+  color: #fff;
+  font-family: 'Lexend', sans-serif;
+}
+
+.merged-option {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  border-radius: 12px;
+  transition: background 0.2s;
+}
+
+.merged-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.merged-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-text-soft);
+}
+
+.merged-option a {
+  color: var(--md-accent) !important;
+  font-weight: 600;
+}
+
+.merged-prof {
+  font-size: 0.85rem;
+  color: var(--md-text-soft);
+}
+
+
+/* ============================================================
+   11. ANIMACIÓN DE ENTRADA ("push up")
+   Los elementos suben 24px mientras aparecen.
+   Usamos "backwards" y NO "both": con "both" la animación
+   mantendría para siempre opacity/transform y pisaría el
+   efecto hover de las tarjetas y el fade del banner al scroll.
+   ============================================================ */
+@keyframes pushUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#page-header,
+.coursebox,
+#block-region-side-pre .block {
+  animation: pushUp 0.6s ease-out backwards;
+}
+
+/* Efecto escalonado: cada tarjeta entra un poco después de la anterior */
+.coursebox:nth-child(1)  { animation-delay: 0.05s; }
+.coursebox:nth-child(2)  { animation-delay: 0.10s; }
+.coursebox:nth-child(3)  { animation-delay: 0.15s; }
+.coursebox:nth-child(4)  { animation-delay: 0.20s; }
+.coursebox:nth-child(5)  { animation-delay: 0.25s; }
+.coursebox:nth-child(6)  { animation-delay: 0.30s; }
+.coursebox:nth-child(7)  { animation-delay: 0.35s; }
+.coursebox:nth-child(8)  { animation-delay: 0.40s; }
+.coursebox:nth-child(9)  { animation-delay: 0.45s; }
+.coursebox:nth-child(10) { animation-delay: 0.50s; }
+.coursebox:nth-child(11) { animation-delay: 0.55s; }
+.coursebox:nth-child(12) { animation-delay: 0.60s; }
+
+/* Respeta a quien tiene "reducir movimiento" activado en su sistema */
+@media (prefers-reduced-motion: reduce) {
+  #page-header,
+  .coursebox,
+  #block-region-side-pre .block,
+  .unalm-unit-window {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   12. APARTADOS DE CURSO — VENTANAS LIQUID GLASS Y BOTONES
+   Inspirado en la estética Liquid Glass oscura (Fedora Aura Glass / macOS):
+     - Cada unidad es una ventana widget con chasis escarchado
+     - Titlebar con controles de ventana (dots) y botón minimizar
+     - Cada elemento/recurso es un botón/tarjeta interactiva con
+       íconos vectoriales según tipo (PDF, PPT, Excel, Video, etc.)
+   ============================================================ */
+
+/* Contenedor principal de contenidos de curso Moodle */
+.course-content {
+  padding-bottom: 50px !important;
+}
+
+.course-content ul.topics,
+.course-content ul.weeks {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Ocultar títulos originales toscos de Moodle en las unidades */
+.unalm-unit-window h3.sectionname,
+.unalm-unit-window .sectionname,
+.unalm-unit-window .hidden.sectionname,
+.unalm-unit-window .content > h3 {
+  display: none !important;
+}
+
+.course-content .sectionname a {
+  text-decoration: none !important;
+}
+
+.course-content .left.side,
+.course-content .right.side {
+  display: none !important;
+}
+
+.course-content hr {
+  display: none !important;
+}
+
+/* Eliminar el molesto scrollbar horizontal bajo la imagen del curso */
+.course-content .no-overflow,
+.course-content #section-0 .summary .no-overflow,
+.course-content #section-0 .no-overflow,
+.summary .no-overflow {
+  overflow: visible !important;
+  overflow-x: visible !important;
+}
+
+/* Barra de progreso de Moodle estilizada */
+.unalm-progress-pill,
+#completionprogressid {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 14px !important;
+  background: rgba(31, 157, 119, 0.15) !important;
+  border: 1px solid rgba(127, 232, 200, 0.25) !important;
+  border-radius: 9999px !important;
+  color: var(--md-accent) !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 20px !important;
+  backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* --- VENTANA LIQUID GLASS DE UNIDAD / APARTADO --- */
+.unalm-unit-window,
+.course-content ul.topics > li.section,
+.course-content ul.weeks > li.section {
+  background: linear-gradient(145deg, rgba(18, 25, 23, 0.82) 0%, rgba(10, 16, 15, 0.90) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 24px !important;
+  margin-bottom: 24px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.55),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 0 24px rgba(255, 255, 255, 0.02) !important;
+  position: relative !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  animation: pushUp 0.6s ease-out backwards;
+}
+
+.unalm-unit-window:hover {
+  border-color: rgba(127, 232, 200, 0.3) !important;
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(31, 157, 119, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Filete especular luminoso superior */
+.unalm-unit-window::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(127, 232, 200, 0.5) 30%, rgba(255, 255, 255, 0.8) 50%, rgba(127, 232, 200, 0.5) 70%, transparent 100%);
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* --- TITLEBAR DE LA UNIDAD --- */
+.unalm-unit-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 14px 20px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  position: relative !important;
+  z-index: 2;
+  transition: background 0.2s ease !important;
+}
+
+.unalm-unit-bar:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.unalm-unit-bar .unalm-window-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex: 1 !important;
+  margin: 0 14px !important;
+  min-width: 0 !important;
+}
+
+.unalm-unit-badge {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  padding: 3px 9px !important;
+  border-radius: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+.unalm-unit-badge.badge-unit {
+  background: rgba(31, 157, 119, 0.25) !important;
+  color: #7fe8c8 !important;
+  border: 1px solid rgba(127, 232, 200, 0.4) !important;
+}
+
+.unalm-unit-badge.badge-general {
+  background: rgba(168, 85, 247, 0.22) !important;
+  color: #c084fc !important;
+  border: 1px solid rgba(168, 85, 247, 0.38) !important;
+}
+
+.unalm-unit-badge.badge-practice {
+  background: rgba(56, 189, 248, 0.22) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.38) !important;
+}
+
+.unalm-unit-badge.badge-eval {
+  background: rgba(245, 158, 11, 0.22) !important;
+  color: #fbbf24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.38) !important;
+}
+
+.unalm-unit-badge.badge-project {
+  background: rgba(236, 72, 153, 0.22) !important;
+  color: #f472b6 !important;
+  border: 1px solid rgba(236, 72, 153, 0.38) !important;
+}
+
+.unalm-unit-name {
+  color: #fff !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Colapsar ventana de unidad */
+.unalm-unit-window.unalm-unit-collapsed .content {
+  display: none !important;
+}
+
+.unalm-unit-window.unalm-unit-collapsed .unalm-unit-toggle .chevron {
+  transform: rotate(-90deg) !important;
+}
+
+/* --- CUERPO DE CONTENIDO DE LA UNIDAD --- */
+.unalm-unit-window .content {
+  padding: 22px 24px !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.unalm-unit-window .content ul.section {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+/* Limpieza de espaciador de sangría viejo de Moodle */
+.unalm-unit-window .mod-indent {
+  display: none !important;
+}
+
+/* El contenedor .mod-indent-outer DEBE ser visible para que se vean los recursos */
+.unalm-unit-window .mod-indent-outer {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.unalm-unit-window .mod-indent-outer > div {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+.unalm-unit-window li.activity {
+  list-style: none !important;
+  margin: 0 0 10px 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+  width: 100% !important;
+  display: block !important;
+}
+
+.unalm-unit-window .activityinstance {
+  display: block !important;
+  width: 100% !important;
+  flex: 1 !important;
+  position: relative !important;
+}
+
+/* Ocultar casillas de completado en etiquetas o subtítulos de categoría */
+.unalm-unit-window li.activity.modtype_label .actions {
+  display: none !important;
+}
+
+/* --- SUBENCABEZADOS DE CATEGORÍA (Material de Teoría, Caso, Lectura, Video) --- */
+.unalm-activity-label-header {
+  margin-top: 14px !important;
+  margin-bottom: 2px !important;
+}
+
+.unalm-activity-label-header:first-child {
+  margin-top: 0 !important;
+}
+
+.unalm-category-title,
+.unalm-activity-label-header b,
+.unalm-activity-label-header strong {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 0.8rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  font-weight: 700 !important;
+  color: var(--md-accent) !important;
+  background: rgba(31, 157, 119, 0.12) !important;
+  border-left: 3px solid var(--md-accent) !important;
+  padding: 5px 12px !important;
+  border-radius: 8px !important;
+  margin-bottom: 4px !important;
+}
+
+.unalm-label-icon .unalm-icon {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* --- BOTÓN / TARJETA LIQUID GLASS DE ACTIVIDAD --- */
+.unalm-activity-btn,
+.unalm-unit-window .activityinstance a.unalm-activity-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 12px 64px 12px 18px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 16px !important;
+  text-decoration: none !important;
+  color: #fff !important;
+  backdrop-filter: blur(14px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.unalm-activity-btn:hover,
+.unalm-unit-window .activityinstance a.unalm-activity-btn:hover {
+  background: rgba(31, 157, 119, 0.16) !important;
+  border-color: rgba(127, 232, 200, 0.38) !important;
+  border-top-color: rgba(127, 232, 200, 0.55) !important;
+  transform: translateY(-2px) scale(1.004) !important;
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.45),
+    0 0 20px rgba(31, 157, 119, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
+.unalm-act-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  min-width: 0 !important;
+  flex: 1 !important;
+}
+
+/* Caja de ícono con estilo vidrio coloreado */
+.unalm-act-icon-box {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  transition: transform 0.2s ease !important;
+}
+
+.unalm-activity-btn:hover .unalm-act-icon-box {
+  transform: scale(1.08) !important;
+}
+
+.unalm-act-icon-box .act-icon-svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Paleta de íconos según tipo de recurso */
+.unalm-act-icon-box.type-pdf,
+.unalm-act-icon-box.type-syllabus {
+  background: rgba(239, 68, 68, 0.18) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.32) !important;
+}
+
+.unalm-act-icon-box.type-ppt {
+  background: rgba(249, 115, 22, 0.18) !important;
+  color: #fb923c !important;
+  border: 1px solid rgba(249, 115, 22, 0.32) !important;
+}
+
+.unalm-act-icon-box.type-sheet {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.32) !important;
+}
+
+.unalm-act-icon-box.type-video {
+  background: rgba(14, 165, 233, 0.18) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(14, 165, 233, 0.32) !important;
+}
+
+.unalm-act-icon-box.type-forum {
+  background: rgba(139, 92, 246, 0.18) !important;
+  color: #a78bfa !important;
+  border: 1px solid rgba(139, 92, 246, 0.32) !important;
+}
+
+.unalm-act-icon-box.type-assign {
+  background: rgba(234, 179, 8, 0.18) !important;
+  color: #facc15 !important;
+  border: 1px solid rgba(234, 179, 8, 0.32) !important;
+}
+
+.unalm-act-icon-box.type-word {
+  background: rgba(59, 130, 246, 0.18) !important;
+  color: #60a5fa !important;
+  border: 1px solid rgba(59, 130, 246, 0.32) !important;
+}
+
+.unalm-act-icon-box.type-code {
+  background: rgba(20, 184, 166, 0.18) !important;
+  color: #2dd4bf !important;
+  border: 1px solid rgba(20, 184, 166, 0.32) !important;
+}
+
+.unalm-act-icon-box.type-zip {
+  background: rgba(168, 85, 247, 0.18) !important;
+  color: #c084fc !important;
+  border: 1px solid rgba(168, 85, 247, 0.32) !important;
+}
+
+.unalm-act-icon-box.type-audio {
+  background: rgba(244, 63, 94, 0.18) !important;
+  color: #fb7185 !important;
+  border: 1px solid rgba(244, 63, 94, 0.32) !important;
+}
+
+.unalm-act-icon-box.type-file {
+  background: rgba(148, 163, 184, 0.18) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(148, 163, 184, 0.32) !important;
+}
+
+/* Textos informativos dentro del botón */
+.unalm-act-info {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  min-width: 0 !important;
+}
+
+.unalm-act-title {
+  color: #f8fafc !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-size: 0.96rem !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.unalm-act-meta {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.unalm-act-tag {
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  padding: 2px 7px !important;
+  border-radius: 6px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.unalm-act-tag.tag-pdf,
+.unalm-act-tag.tag-syllabus {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #fca5a5 !important;
+}
+
+.unalm-act-tag.tag-word {
+  background: rgba(59, 130, 246, 0.15) !important;
+  color: #93c5fd !important;
+}
+
+.unalm-act-tag.tag-ppt {
+  background: rgba(249, 115, 22, 0.15) !important;
+  color: #fdba74 !important;
+}
+
+.unalm-act-tag.tag-sheet {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #6ee7b7 !important;
+}
+
+.unalm-act-tag.tag-code {
+  background: rgba(20, 184, 166, 0.15) !important;
+  color: #5eead4 !important;
+}
+
+.unalm-act-tag.tag-zip {
+  background: rgba(168, 85, 247, 0.15) !important;
+  color: #d8b4fe !important;
+}
+
+.unalm-act-tag.tag-audio {
+  background: rgba(244, 63, 94, 0.15) !important;
+  color: #fda4af !important;
+}
+
+.unalm-act-tag.tag-video {
+  background: rgba(14, 165, 233, 0.15) !important;
+  color: #7dd3fc !important;
+}
+
+.unalm-act-tag.tag-forum {
+  background: rgba(139, 92, 246, 0.15) !important;
+  color: #c4b5fd !important;
+}
+
+.unalm-act-tag.tag-assign {
+  background: rgba(234, 179, 8, 0.15) !important;
+  color: #fde047 !important;
+}
+
+.unalm-act-tag.tag-file {
+  background: rgba(148, 163, 184, 0.15) !important;
+  color: #cbd5e1 !important;
+}
+
+.unalm-act-hint {
+  font-size: 0.74rem !important;
+  color: var(--md-text-soft) !important;
+  opacity: 0.85 !important;
+}
+
+/* Indicador de acción (flecha up-right) */
+.unalm-act-arrow {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  color: var(--md-text-soft) !important;
+  transition: all 0.2s ease !important;
+}
+
+.unalm-activity-btn:hover .unalm-act-arrow {
+  background: rgba(31, 157, 119, 0.3) !important;
+  border-color: rgba(127, 232, 200, 0.5) !important;
+  color: #fff !important;
+  transform: translate(2px, -2px) !important;
+}
+
+.unalm-act-arrow .arrow-action {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* --- CASILLA DE FINALIZACIÓN ELEGANTE (PROGRESS STATUS) --- */
+.unalm-act-completion,
+.unalm-unit-window .actions,
+.unalm-unit-window li.activity .actions,
+.unalm-unit-window .mod-indent-outer > div > .actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  right: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.unalm-act-completion .btn-link,
+.unalm-unit-window .actions .btn-link {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
+}
+
+.unalm-act-completion img.icon,
+.unalm-unit-window .actions img.icon {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 50% !important;
+  background: rgba(31, 157, 119, 0.2) !important;
+  border: 1px solid rgba(127, 232, 200, 0.4) !important;
+  padding: 3px !important;
+  transition: all 0.2s ease !important;
+}
+
+.unalm-act-completion img.icon:hover {
+  transform: scale(1.18) !important;
+  background: rgba(31, 157, 119, 0.4) !important;
+  box-shadow: 0 0 10px rgba(127, 232, 200, 0.5) !important;
+}
+
+/* --- SECCIÓN 0: FOTO DEL CURSO HERO Y DATOS DE CONTACTO --- */
+.unalm-hero-styled,
+.course-content #section-0 .summary img {
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !important;
+  display: block !important;
+  margin: 0 auto 20px auto !important;
+  transition: transform 0.3s ease !important;
+}
+
+.unalm-hero-styled:hover {
+  transform: scale(1.01) !important;
+}
+
+.unalm-summary-styled,
+.course-content #section-0 .summary .no-overflow {
+  color: var(--md-text) !important;
+  font-size: 0.92rem !important;
+  line-height: 1.6 !important;
+}
+
+/* ============================================================
+   ESTILOS PARA TABLAS EN MOODLE (Adiós a las rayas blancas)
+   Y FORMATEO DE TAREAS EN BOTONES/PILLS LIQUID GLASS (Foto 3)
+   ============================================================ */
+
+/* Eliminar radicalmente todos los fondos blancos de Bootstrap y Moodle en tablas */
+table.generaltable,
+table.generaltable tbody,
+table.generaltable tr,
+table.generaltable td,
+table.generaltable th,
+.table-striped,
+.table-striped tbody,
+.table-striped tbody > tr,
+.table-striped tbody > tr:nth-child(odd),
+.table-striped tbody > tr:nth-child(odd) > td,
+.table-striped tbody > tr:nth-child(odd) > th,
+.table-striped tbody > tr:nth-of-type(odd),
+.table-striped tbody > tr:nth-of-type(odd) > td,
+.table-striped tbody > tr:nth-of-type(odd) > th,
+table.generaltable tbody tr:nth-child(odd),
+table.generaltable tbody tr:nth-child(odd) td,
+table.generaltable tbody tr:nth-child(odd) th,
+table.generaltable tr:nth-of-type(odd),
+table.generaltable tr:nth-of-type(odd) td,
+table.generaltable tr:nth-of-type(odd) th,
+.generaltable td,
+.generaltable th,
+.table td,
+.table th,
+.box.boxaligncenter.submissionsummarytable,
+.submissionstatustable {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--md-text) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Contenedor elegante de la entrega / tarea */
+.submissionstatustable {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  margin: 24px 0 !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35) !important;
+}
+
+.submissionstatustable h3,
+.unalm-assign-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 1.18rem !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  margin: 0 0 18px 2px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+.unalm-assign-dots {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-right: 4px !important;
+}
+
+.unalm-assign-dots .dot {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+}
+
+.unalm-assign-dots .dot-red { background: #ff5f56; box-shadow: 0 0 6px rgba(255, 95, 86, 0.4); }
+.unalm-assign-dots .dot-yellow { background: #ffbd2e; box-shadow: 0 0 6px rgba(255, 189, 46, 0.4); }
+.unalm-assign-dots .dot-green { background: #27c93f; box-shadow: 0 0 6px rgba(39, 201, 63, 0.4); }
+
+/* Layout de la tabla: cada fila se convierte en una píldora/tarjeta separada */
+.submissionstatustable table.generaltable,
+.submissionsummarytable table.generaltable {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+  border: none !important;
+  margin: 0 !important;
+  border-collapse: separate !important;
+  border-spacing: 0 8px !important;
+}
+
+.submissionstatustable table.generaltable tbody,
+.submissionsummarytable table.generaltable tbody {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+/* CADA FILA: Formato idéntico a las cards/pills de navegación (Foto 3) */
+.submissionstatustable table.generaltable tr,
+.submissionsummarytable table.generaltable tr,
+.unalm-submission-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 12px 18px !important;
+  margin-bottom: 0 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 14px !important;
+  color: #e2e8f0 !important;
+  font-size: 0.88rem !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-sizing: border-box !important;
+}
+
+.submissionstatustable table.generaltable tr:hover,
+.submissionsummarytable table.generaltable tr:hover,
+.unalm-submission-row:hover {
+  background: rgba(31, 157, 119, 0.12) !important;
+  border-color: rgba(127, 232, 200, 0.32) !important;
+  border-top-color: rgba(127, 232, 200, 0.5) !important;
+  transform: translateX(3px) translateY(-1px) !important;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Columna Izquierda (Label del dato) */
+.submissionstatustable table.generaltable td.c0,
+.submissionsummarytable table.generaltable td.c0 {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  color: #94a3b8 !important;
+  font-weight: 500 !important;
+  font-size: 0.88rem !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.unalm-row-icon {
+  width: 18px !important;
+  height: 18px !important;
+  color: var(--md-accent) !important;
+  flex-shrink: 0 !important;
+  transition: transform 0.2s ease, color 0.2s ease !important;
+}
+
+.submissionstatustable table.generaltable tr:hover .unalm-row-icon {
+  color: #fff !important;
+  transform: scale(1.1) !important;
+}
+
+/* Columna Derecha (Valor / Estado) */
+.submissionstatustable table.generaltable td.c1,
+.submissionsummarytable table.generaltable td.c1 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  text-align: right !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  font-size: 0.88rem !important;
+  flex-grow: 1 !important;
+}
+
+/* Fila de comentarios: alineación superior si se abre */
+.submissionstatustable table.generaltable tr.lastrow,
+.submissionsummarytable table.generaltable tr.lastrow {
+  align-items: flex-start !important;
+}
+
+/* Chips / Badges Liquid Glass para estados */
+.unalm-badge-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 4px 12px !important;
+  border-radius: 999px !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.3 !important;
+}
+
+.unalm-badge-pill.pill-unsubmitted {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
+}
+
+.unalm-badge-pill.pill-ungraded {
+  background: rgba(234, 179, 8, 0.12) !important;
+  border: 1px solid rgba(234, 179, 8, 0.28) !important;
+  color: #facc15 !important;
+}
+
+.unalm-badge-pill.pill-submitted {
+  background: rgba(34, 197, 94, 0.15) !important;
+  border: 1px solid rgba(34, 197, 94, 0.35) !important;
+  color: #4ade80 !important;
+}
+
+/* Estado de tiempo retrasado / overdue: reemplaza el font color="red" feo */
+.unalm-badge-pill.pill-overdue,
+.submissionstatustable .overdue,
+.submissionstatustable .overdue font,
+.submissionsummarytable .overdue,
+.submissionsummarytable .overdue font {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border: 1px solid rgba(239, 68, 68, 0.28) !important;
+  border-radius: 999px !important;
+  padding: 4px 12px !important;
+  color: #f87171 !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.unalm-icon-mini {
+  width: 14px !important;
+  height: 14px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Área de comentarios de la entrega */
+.submissionstatustable .commentscontainer {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 8px !important;
+}
+
+.submissionstatustable .commentscontainer a.comment-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: var(--md-accent) !important;
+  text-decoration: none !important;
+  font-size: 0.84rem !important;
+  font-weight: 500 !important;
+  transition: color 0.2s ease !important;
+}
+
+.submissionstatustable .commentscontainer a.comment-link:hover {
+  color: #fff !important;
+}
+
+.submissionstatustable .commentscontainer textarea {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 10px !important;
+  color: #fff !important;
+  padding: 8px 12px !important;
+  font-size: 0.85rem !important;
+  outline: none !important;
+  transition: border-color 0.2s ease !important;
+}
+
+.submissionstatustable .commentscontainer textarea:focus {
+  border-color: var(--md-accent) !important;
+  box-shadow: 0 0 10px rgba(127, 232, 200, 0.2) !important;
+}
+
+/* Botones de acción en Tareas (Agregar entrega / Editar entrega) */
+.path-mod-assign .singlebutton input[type="submit"],
+.path-mod-assign .singlebutton button,
+.path-mod-assign input[type="submit"].btn-primary,
+.submissionstatustable + .singlebutton input[type="submit"],
+.submissionsummarytable + .singlebutton input[type="submit"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 11px 26px !important;
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.85) 0%, rgba(16, 90, 68, 0.9) 100%) !important;
+  color: #ffffff !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(127, 232, 200, 0.38) !important;
+  border-top: 1px solid rgba(127, 232, 200, 0.65) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 18px rgba(31, 157, 119, 0.18) !important;
+  cursor: pointer !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  text-decoration: none !important;
+}
+
+.path-mod-assign .singlebutton input[type="submit"]:hover,
+.path-mod-assign .singlebutton button:hover,
+.submissionstatustable + .singlebutton input[type="submit"]:hover,
+.submissionsummarytable + .singlebutton input[type="submit"]:hover {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 1) 0%, rgba(20, 110, 84, 1) 100%) !important;
+  border-color: rgba(127, 232, 200, 0.7) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 24px rgba(31, 157, 119, 0.35) !important;
+}
+
+/* Soporte general para cualquier otra tabla que no sea entregas ni calificaciones */
+table.generaltable:not(.unalm-transformed):not(.user-grade):not(.overview-grade) {
+  border-collapse: separate !important;
+  border-spacing: 0 6px !important;
+}
+
+table.generaltable:not(.unalm-transformed):not(.user-grade):not(.overview-grade) th {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--md-accent) !important;
+  font-weight: 600 !important;
+  border: none !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+}
+
+table.generaltable:not(.unalm-transformed):not(.user-grade):not(.overview-grade) td {
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: #e2e8f0 !important;
+  border: none !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+}
+
+/* ============================================================
+   SECCIÓN 14: PÁGINA DE LOGIN (INICIAR SESIÓN)
+   Fondo del campus UNALM centrado + Tarjeta Liquid Glass (Foto 3)
+   ============================================================ */
+
+/* Evitar que el degradado verde de Sección 2 pinte detrás del login */
+html:has(body#page-login-index),
+html:has(body.pagelayout-login),
+html:has(body.path-login) {
+  background: #050a08 !important;
+  background-color: #050a08 !important;
+  background-image: none !important;
+  background-size: auto !important;
+  min-height: 100vh !important;
+  height: auto !important;
+}
+
+/* Fondo fotográfico del campus UNALM centrado con superposición oscura elegante */
+html body#page-login-index,
+html body.pagelayout-login,
+html body.path-login,
+html body.theme-green3#page-login-index {
+  background-color: #050a08 !important;
+  background-image:
+    linear-gradient(135deg, rgba(6, 16, 12, 0.68) 0%, rgba(3, 9, 7, 0.82) 100%),
+    url('https://www.lamolina.edu.pe/Gaceta/edicion2025/fotos/nota128/exterior.jpg'),
+    url('chrome-extension://__MSG_@@extension_id__/exterior.jpg') !important;
+  background-size: cover, cover, cover !important;
+  background-position: center center, center center, center center !important;
+  background-attachment: fixed, fixed, fixed !important;
+  background-repeat: no-repeat, no-repeat, no-repeat !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 28px 16px !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* Eliminar RADICALMENTE el fondo blanco del contenedor de Moodle Degrade (#loginone-wrapper y todos sus hijos) */
+html body#page-login-index #loginone-wrapper,
+html body.pagelayout-login #loginone-wrapper,
+html body.path-login #loginone-wrapper,
+html body#page-login-index #loginone-wrapper::before,
+html body#page-login-index #loginone-wrapper::after {
+  width: 100% !important;
+  max-width: 440px !important;
+  margin: auto !important;
+  padding: 0 !important;
+  float: none !important;
+  position: relative !important;
+  z-index: 10 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html body#page-login-index #loginone-wrapper .login-content,
+html body#page-login-index #loginone-wrapper .login-inner-wrapper-2,
+html body#page-login-index #loginone-wrapper .login-inner-wrapper-2::before,
+html body#page-login-index #loginone-wrapper .login-inner-wrapper-2::after,
+html body#page-login-index #loginone-wrapper div[role="main"],
+html body#page-login-index #loginone-wrapper .m-y-3,
+html body#page-login-index #loginone-wrapper .row,
+html body#page-login-index #loginone-wrapper [class*="col-"],
+html body#page-login-index #loginone-wrapper .card-block,
+html body#page-login-index #loginone-wrapper #region-main,
+html body#page-login-index #loginone-wrapper .loginbox,
+html body#page-login-index #loginone-wrapper .loginpanel,
+html body#page-login-index #loginone-wrapper .subcontent,
+html body#page-login-index #loginone-wrapper .loginform,
+html body#page-login-index #loginone-wrapper .signuppanel {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  transform: none !important;
+  float: none !important;
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  min-height: 0 !important;
+  text-align: left !important;
+}
+
+/* Ocultar el contenedor viejo del birrete fuera de la tarjeta y espacios vacíos */
+html body#page-login-index #loginone-wrapper .login-inner-wrapper-2 > .mb-2,
+html body#page-login-index #loginone-wrapper .m-y-3,
+html body#page-login-index #loginone-wrapper .signuppanel,
+html body#page-login-index #loginone-wrapper .loginpanel > h2 {
+  display: none !important;
+}
+
+/* Tarjeta principal estilo Liquid Glass / Aura Glassmorphism (idéntica a la vista previa y Foto 3) */
+html body#page-login-index .card,
+html body.pagelayout-login .card,
+html body.path-login .card,
+html body#page-login-index .unalm-login-card {
+  background: linear-gradient(155deg, rgba(16, 26, 22, 0.74) 0%, rgba(8, 16, 13, 0.85) 100%) !important;
+  background-color: transparent !important;
+  backdrop-filter: blur(32px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.34) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 28px !important;
+  box-shadow:
+    0 28px 65px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(31, 157, 119, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, 0.28) !important;
+  padding: 26px 30px 30px 30px !important;
+  color: #ffffff !important;
+  position: relative !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Filete luminoso especular superior */
+html body#page-login-index .card::before,
+.unalm-login-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(127, 232, 200, 0.65) 30%, rgba(255, 255, 255, 0.9) 50%, rgba(127, 232, 200, 0.65) 70%, transparent 100%) !important;
+  opacity: 0.95 !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+/* Barra superior estilo ventana macOS + badge UNALM PORTAL */
+.unalm-login-window-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 20px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.unalm-login-window-dots {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.unalm-login-portal-badge {
+  font-size: 11px !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  color: rgba(127, 232, 200, 0.9) !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  font-weight: 600 !important;
+}
+
+/* Cabecera de marca con birrete luminoso dentro de la tarjeta */
+.unalm-login-brand {
+  text-align: center !important;
+  margin-bottom: 22px !important;
+}
+
+.unalm-login-emblem {
+  width: 64px !important;
+  height: 64px !important;
+  margin: 0 auto 12px auto !important;
+  border-radius: 18px !important;
+  background: rgba(31, 157, 119, 0.2) !important;
+  border: 1px solid rgba(127, 232, 200, 0.4) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #7fe8c8 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 24px rgba(31, 157, 119, 0.3) !important;
+}
+
+.unalm-login-title {
+  font-size: 1.55rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  text-align: center !important;
+  margin: 0 0 4px 0 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.2 !important;
+}
+
+.unalm-login-subtitle {
+  font-size: 0.78rem !important;
+  color: #94a3b8 !important;
+  text-align: center !important;
+  margin: 0 !important;
+}
+
+/* Alerta / Error de sesión expirada estilizada en píldora */
+html body#page-login-index .loginerrors,
+html body#page-login-index .unalm-login-alert {
+  background: rgba(244, 63, 94, 0.14) !important;
+  border: 1px solid rgba(244, 63, 94, 0.35) !important;
+  border-radius: 12px !important;
+  padding: 10px 14px !important;
+  margin: 0 0 18px 0 !important;
+  color: #fda4af !important;
+  font-size: 0.78rem !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+}
+
+html body#page-login-index .loginerrors .error,
+html body#page-login-index #loginerrormessage {
+  color: #fda4af !important;
+  background: transparent !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Labels de inputs */
+html body#page-login-index .form-label {
+  text-align: left !important;
+  margin: 0 0 6px 4px !important;
+  padding: 0 !important;
+  width: 100% !important;
+  float: none !important;
+}
+
+html body#page-login-index .form-label label {
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: #cbd5e1 !important;
+  margin: 0 !important;
+  display: block !important;
+  text-align: left !important;
+}
+
+html body#page-login-index .form-input {
+  width: 100% !important;
+  float: none !important;
+  margin: 0 !important;
+}
+
+/* Inputs de Usuario y Contraseña (cápsulas Liquid Glass con ícono a la izquierda) */
+html body#page-login-index .form-control,
+html body#page-login-index #loginone-wrapper input[type="text"],
+html body#page-login-index #loginone-wrapper input[type="password"],
+html body#page-login-index .unalm-login-input {
+  width: 100% !important;
+  height: 46px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 12px !important;
+  padding: 0 42px 0 42px !important;
+  color: #ffffff !important;
+  font-size: 0.92rem !important;
+  box-sizing: border-box !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: none !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+html body#page-login-index .form-control:focus,
+html body#page-login-index #loginone-wrapper input[type="text"]:focus,
+html body#page-login-index #loginone-wrapper input[type="password"]:focus,
+html body#page-login-index .unalm-login-input:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: #34d399 !important;
+  border-top-color: #a7f3d0 !important;
+  box-shadow: 0 0 18px rgba(127, 232, 200, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+  outline: none !important;
+}
+
+html body#page-login-index .form-control::placeholder,
+html body#page-login-index .unalm-login-input::placeholder {
+  color: rgba(148, 163, 184, 0.65) !important;
+}
+
+/* Contenedores de inputs con ícono */
+.unalm-input-group {
+  position: relative !important;
+  margin-bottom: 14px !important;
+  width: 100% !important;
+}
+
+.unalm-input-icon {
+  position: absolute !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 17px !important;
+  height: 17px !important;
+  color: #34d399 !important;
+  opacity: 0.9 !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+/* Fila combinada de Recordar usuario (izquierda) y Olvidó contraseña (derecha) */
+.unalm-login-options {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  margin: 6px 0 18px 0 !important;
+  width: 100% !important;
+  flex-wrap: wrap !important;
+}
+
+html body#page-login-index #login .rememberpass {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 0.78rem !important;
+  color: #cbd5e1 !important;
+}
+
+html body#page-login-index .rememberpass label {
+  color: #cbd5e1 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  font-size: 0.78rem !important;
+  font-weight: 400 !important;
+  display: inline !important;
+}
+
+html body#page-login-index .rememberpass input[type="checkbox"] {
+  accent-color: #10b981 !important;
+  width: 14px !important;
+  height: 14px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+}
+
+html body#page-login-index .forgetpass {
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: right !important;
+}
+
+html body#page-login-index .forgetpass a,
+.unalm-forgot-link {
+  color: #34d399 !important;
+  text-decoration: none !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+html body#page-login-index .forgetpass a:hover,
+.unalm-forgot-link:hover {
+  color: #7fe8c8 !important;
+  text-shadow: 0 0 8px rgba(127, 232, 200, 0.4) !important;
+  text-decoration: underline !important;
+}
+
+/* Botón principal de Acceder (Liquid Glass verde radiante) */
+html body#page-login-index #loginbtn,
+html body#page-login-index input[type="submit"]#loginbtn,
+html body#page-login-index input[type="submit"].btn-primary,
+.unalm-login-btn {
+  width: 100% !important;
+  height: 48px !important;
+  border-radius: 14px !important;
+  background: linear-gradient(90deg, #10b981 0%, #059669 50%, #0d9488 100%) !important;
+  background-color: #10b981 !important;
+  border: 1px solid rgba(52, 211, 153, 0.45) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.45) !important;
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  box-shadow: 0 10px 26px rgba(6, 78, 59, 0.6), 0 0 20px rgba(16, 185, 129, 0.25) !important;
+  cursor: pointer !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  margin-top: 4px !important;
+  padding: 0 20px !important;
+}
+
+html body#page-login-index #loginbtn:hover,
+html body#page-login-index input[type="submit"]#loginbtn:hover,
+html body#page-login-index input[type="submit"].btn-primary:hover,
+.unalm-login-btn:hover {
+  transform: translateY(-2px) !important;
+  background: linear-gradient(90deg, #34d399 0%, #10b981 50%, #14b8a6 100%) !important;
+  box-shadow: 0 14px 30px rgba(16, 185, 129, 0.45), 0 0 25px rgba(127, 232, 200, 0.35) !important;
+}
+
+/* Texto de cookies discreto al pie */
+html body#page-login-index .desc,
+html body#page-login-index p:has(a[href*="help.php"]),
+.unalm-login-footer-note {
+  font-size: 0.72rem !important;
+  color: #94a3b8 !important;
+  text-align: center !important;
+  margin-top: 18px !important;
+  margin-bottom: 0 !important;
+  line-height: 1.4 !important;
+}
+
+html body#page-login-index .desc img.iconhelp {
+  opacity: 0.75 !important;
+  filter: invert(1) brightness(1.4) !important;
+  vertical-align: middle !important;
+  margin-left: 4px !important;
+}
+
+/* Modal de Confirmación cuando ya ha iniciado sesión (Foto 1 / notice) */
+html body#page-login-index #notice.modal,
+html body#page-login-index #notice.modal .modal-content {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+  position: static !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body#page-login-index #notice .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 0 0 14px 0 !important;
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+html body#page-login-index #notice .modal-header h4 {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+}
+
+html body#page-login-index #notice .modal-body {
+  padding: 16px 0 !important;
+  color: #cbd5e1 !important;
+  font-size: 0.88rem !important;
+  line-height: 1.55 !important;
+  text-align: center !important;
+}
+
+html body#page-login-index #notice .modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 16px 0 0 0 !important;
+}
+
+html body#page-login-index #notice .modal-footer .buttons {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+html body#page-login-index #notice .modal-footer .singlebutton {
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+html body#page-login-index #notice .modal-footer .singlebutton form {
+  width: 100% !important;
+}
+
+/* Botón Cerrar Sesión (Rojo translúcido) */
+html body#page-login-index #notice .singlebutton form[action*="logout.php"] input[type="submit"] {
+  width: 100% !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  background: rgba(239, 68, 68, 0.18) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  color: #fca5a5 !important;
+  font-weight: 600 !important;
+  font-size: 0.86rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+html body#page-login-index #notice .singlebutton form[action*="logout.php"] input[type="submit"]:hover {
+  background: rgba(239, 68, 68, 0.32) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.38) !important;
+}
+
+/* Botón Cancelar (Verde translúcido) */
+html body#page-login-index #notice .singlebutton form:not([action*="logout.php"]) input[type="submit"] {
+  width: 100% !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  background: rgba(31, 157, 119, 0.25) !important;
+  border: 1px solid rgba(127, 232, 200, 0.4) !important;
+  color: #7fe8c8 !important;
+  font-weight: 600 !important;
+  font-size: 0.86rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+html body#page-login-index #notice .singlebutton form:not([action*="logout.php"]) input[type="submit"]:hover {
+  background: rgba(31, 157, 119, 0.45) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(127, 232, 200, 0.38) !important;
+}
+
+/* ============================================================
+   SECCIÓN 15: FOROS, BUSCADOR EN CABECERA Y BLOQUE ADMINISTRACIÓN
+   Corrige botones en blanco/distorsionados y moderniza los foros
+   ============================================================ */
+
+/* Barra de navegación del header: alinear breadcrumb y buscador */
+html body.theme-green3 #page-header #page-navbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 14px !important;
+  margin-top: 10px !important;
+}
+
+html body.theme-green3 #page-header #page-navbar .breadcrumb-nav {
+  margin-top: 0 !important;
+}
+
+html body.theme-green3 #page-header .breadcrumb-button {
+  float: none !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Buscador de foros como cápsula Liquid Glass integrada */
+html body.theme-green3 #page-header .forumsearch fieldset.invisiblefieldset {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 4px 5px 4px 12px !important;
+  background: rgba(16, 26, 23, 0.68) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-radius: 999px !important;
+  backdrop-filter: blur(18px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+html body.theme-green3 #page-header .forumsearch .helptooltip img.iconhelp {
+  filter: invert(1) brightness(1.5) !important;
+  opacity: 0.72 !important;
+  width: 15px !important;
+  height: 15px !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
+}
+
+html body.theme-green3 #page-header .forumsearch input#search {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  width: 175px !important;
+  margin: 0 !important;
+  padding: 0 6px !important;
+  font-size: 0.84rem !important;
+  border-radius: 0 !important;
+}
+
+html body.theme-green3 #page-header .forumsearch input#search::placeholder {
+  color: rgba(203, 213, 225, 0.6) !important;
+}
+
+html body.theme-green3 #page-header .forumsearch input#searchforums {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.9) 0%, rgba(15, 92, 69, 0.95) 100%) !important;
+  background-color: #1F9D77 !important;
+  background-image: linear-gradient(135deg, rgba(31, 157, 119, 0.9) 0%, rgba(15, 92, 69, 0.95) 100%) !important;
+  color: #ffffff !important;
+  text-shadow: none !important;
+  border: 1px solid rgba(127, 232, 200, 0.42) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 999px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 16px !important;
+  margin: 0 !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+}
+
+html body.theme-green3 #page-header .forumsearch input#searchforums:hover {
+  background: linear-gradient(135deg, #25b88c 0%, #157a5b 100%) !important;
+  background-image: linear-gradient(135deg, #25b88c 0%, #157a5b 100%) !important;
+  box-shadow: 0 6px 18px rgba(31, 157, 119, 0.4) !important;
+  transform: none !important;
+}
+
+/* Contenido principal de Foros (#intro, botones, estado vacío y lista de temas) */
+html body.path-mod-forum #region-main #intro.box.generalbox,
+html body.path-mod-forum #region-main .box.generalbox#intro {
+  background: linear-gradient(155deg, rgba(18, 26, 24, 0.82) 0%, rgba(10, 16, 15, 0.9) 100%) !important;
+  backdrop-filter: blur(26px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(185%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 22px !important;
+  padding: 22px 26px !important;
+  margin: 14px 0 18px 0 !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  color: #e2e8f0 !important;
+}
+
+html body.path-mod-forum #region-main #intro .no-overflow {
+  color: #e2e8f0 !important;
+  line-height: 1.6 !important;
+}
+
+html body.path-mod-forum #region-main #intro .no-overflow p:last-child {
+  margin-bottom: 0 !important;
+}
+
+html body.path-mod-forum #region-main #intro a,
+.unalm-forum-link-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 14px !important;
+  margin: 4px 0 !important;
+  border-radius: 12px !important;
+  background: rgba(31, 157, 119, 0.12) !important;
+  border: 1px solid rgba(127, 232, 200, 0.25) !important;
+  color: #7fe8c8 !important;
+  text-decoration: none !important;
+  font-size: 0.86rem !important;
+  font-weight: 500 !important;
+  word-break: break-all !important;
+  transition: all 0.2s ease !important;
+}
+
+html body.path-mod-forum #region-main #intro a:hover,
+.unalm-forum-link-pill:hover {
+  background: rgba(31, 157, 119, 0.24) !important;
+  border-color: rgba(127, 232, 200, 0.55) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
+}
+
+html body.path-mod-forum .singlebutton.forumaddnew {
+  margin: 6px 0 16px 0 !important;
+}
+
+html body.path-mod-forum .forumnodiscuss {
+  padding: 16px 20px !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px dashed rgba(255, 255, 255, 0.14) !important;
+  color: #94a3b8 !important;
+  font-size: 0.88rem !important;
+  text-align: center !important;
+}
+
+/* ============================================================
+   SECCIÓN 15B: TABLA DE DEBATES DEL FORO (.forumheaderlist)
+   Y PUBLICACIONES / COMENTARIOS (.forumpost)
+   ============================================================ */
+html body.path-mod-forum #region-main h2 {
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.unalm-forum-list-wrap {
+  width: 100% !important;
+  overflow-x: auto !important;
+  background: linear-gradient(155deg, rgba(16, 25, 23, 0.86) 0%, rgba(9, 15, 13, 0.94) 100%) !important;
+  background-color: rgba(12, 20, 18, 0.9) !important;
+  backdrop-filter: blur(26px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(185%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  padding: 6px !important;
+  margin-top: 6px !important;
+  box-sizing: border-box !important;
+}
+
+html body.path-mod-forum table.forumheaderlist {
+  width: 100% !important;
+  margin: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  box-shadow: none !important;
+}
+
+html body.path-mod-forum table.forumheaderlist thead th.header {
+  background: rgba(255, 255, 255, 0.045) !important;
+  background-color: rgba(255, 255, 255, 0.045) !important;
+  color: #7fe8c8 !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding: 14px 14px !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+}
+
+html body.path-mod-forum table.forumheaderlist thead th.header:first-child {
+  border-top-left-radius: 16px !important;
+  padding-left: 18px !important;
+}
+
+html body.path-mod-forum table.forumheaderlist thead th.header:last-child {
+  border-top-right-radius: 16px !important;
+}
+
+html body.path-mod-forum table.forumheaderlist thead th.replies,
+html body.path-mod-forum table.forumheaderlist thead th.discussionsubscription {
+  text-align: center !important;
+}
+
+html body.path-mod-forum table.forumheaderlist thead th.lastpost {
+  text-align: right !important;
+  padding-right: 16px !important;
+}
+
+html body.path-mod-forum table.forumheaderlist tbody tr.discussion td {
+  background: rgba(255, 255, 255, 0.012) !important;
+  background-color: rgba(255, 255, 255, 0.012) !important;
+  color: #e2e8f0 !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 0 !important;
+  padding: 13px 14px !important;
+  vertical-align: middle !important;
+  transition: background-color 0.18s ease !important;
+}
+
+html body.path-mod-forum table.forumheaderlist tbody tr.discussion:last-child td {
+  border-bottom: none !important;
+}
+
+html body.path-mod-forum table.forumheaderlist tbody tr.discussion:hover td {
+  background: rgba(31, 157, 119, 0.11) !important;
+  background-color: rgba(31, 157, 119, 0.11) !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.topic.starter {
+  padding-left: 18px !important;
+  min-width: 190px !important;
+  max-width: 340px !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.topic.starter a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: #f8fafc !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  text-decoration: none !important;
+  transition: color 0.18s ease !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.topic.starter a:hover {
+  color: #7fe8c8 !important;
+}
+
+.unalm-forum-topic-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 9px !important;
+  background: rgba(31, 157, 119, 0.18) !important;
+  border: 1px solid rgba(127, 232, 200, 0.34) !important;
+  color: #7fe8c8 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Columna Autor: avatar circular / iniciales + nombre legible */
+.unalm-forum-author-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-width: 170px !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.author .picture,
+html body.path-mod-forum table.forumheaderlist td.author .name {
+  display: inline-flex !important;
+  align-items: center !important;
+  float: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.author img.userpicture,
+html body.path-mod-forum .forumpost img.userpicture {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 1.5px solid rgba(127, 232, 200, 0.45) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.unalm-forum-avatar-initials {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+  flex-shrink: 0 !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.author .name a {
+  color: #e2e8f0 !important;
+  font-size: 0.83rem !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  text-decoration: none !important;
+  text-align: left !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.author .name a:hover {
+  color: #7fe8c8 !important;
+}
+
+/* Columna Réplicas como píldora */
+html body.path-mod-forum table.forumheaderlist td.replies {
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.replies a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 30px !important;
+  height: 26px !important;
+  padding: 0 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.replies a.has-replies {
+  background: rgba(31, 157, 119, 0.22) !important;
+  border-color: rgba(127, 232, 200, 0.45) !important;
+  color: #7fe8c8 !important;
+}
+
+/* Columna Último mensaje (autor en blanco + fecha en menta) */
+html body.path-mod-forum table.forumheaderlist td.lastpost {
+  text-align: right !important;
+  padding-right: 16px !important;
+  white-space: nowrap !important;
+  line-height: 1.4 !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.lastpost a:first-of-type {
+  color: #cbd5e1 !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.lastpost a:last-of-type {
+  color: #7fe8c8 !important;
+  font-size: 0.73rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  opacity: 0.88 !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.lastpost a:hover {
+  color: #ffffff !important;
+  text-decoration: underline !important;
+}
+
+/* Botón Suscripción a discusión */
+html body.path-mod-forum table.forumheaderlist td.discussionsubscription {
+  text-align: center !important;
+  padding-right: 16px !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.discussionsubscription a.discussiontoggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 11px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #94a3b8 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.discussionsubscription a.discussiontoggle:hover {
+  background: rgba(31, 157, 119, 0.24) !important;
+  border-color: rgba(127, 232, 200, 0.5) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+html body.path-mod-forum table.forumheaderlist td.discussionsubscription a.discussiontoggle.is-subscribed {
+  background: rgba(31, 157, 119, 0.28) !important;
+  border-color: rgba(127, 232, 200, 0.55) !important;
+  color: #7fe8c8 !important;
+  box-shadow: 0 0 12px rgba(31, 157, 119, 0.25) !important;
+}
+
+/* Tarjetas de publicaciones y respuestas dentro de un debate (.forumpost) */
+html body.path-mod-forum .forumpost {
+  background: linear-gradient(155deg, rgba(16, 25, 23, 0.88) 0%, rgba(9, 15, 13, 0.94) 100%) !important;
+  background-color: rgba(12, 20, 18, 0.9) !important;
+  backdrop-filter: blur(24px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(185%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 22px !important;
+  padding: 18px 22px !important;
+  margin: 14px 0 !important;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  color: #e2e8f0 !important;
+}
+
+html body.path-mod-forum .forumpost .header {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 16px !important;
+  padding: 12px 14px !important;
+  margin-bottom: 14px !important;
+}
+
+html body.path-mod-forum .forumpost .subject {
+  color: #ffffff !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+}
+
+html body.path-mod-forum .forumpost .author {
+  color: #94a3b8 !important;
+  font-size: 0.8rem !important;
+  margin-top: 2px !important;
+}
+
+html body.path-mod-forum .forumpost .author a {
+  color: #7fe8c8 !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+html body.path-mod-forum .forumpost .maincontent,
+html body.path-mod-forum .forumpost .posting,
+html body.path-mod-forum .forumpost .content {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  line-height: 1.65 !important;
+}
+
+html body.path-mod-forum .forumpost .options .commands a,
+html body.path-mod-forum .forumpost .options .link a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 6px 12px !important;
+  margin: 4px 6px 0 0 !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+html body.path-mod-forum .forumpost .options .commands a:hover,
+html body.path-mod-forum .forumpost .options .link a:hover {
+  background: rgba(31, 157, 119, 0.26) !important;
+  border-color: rgba(127, 232, 200, 0.5) !important;
+  color: #ffffff !important;
+}
+
+html body.path-mod-forum .indent {
+  margin-left: 24px !important;
+  padding-left: 14px !important;
+  border-left: 2px solid rgba(127, 232, 200, 0.22) !important;
+}
+
+/* Bloque Administración lateral (.block_settings / #inst25) como Ventana Liquid Glass */
+html body.theme-green3 .block_settings,
+html body.theme-green3 #inst25.block_settings {
+  position: relative !important;
+  overflow: hidden !important;
+  background: linear-gradient(155deg, rgba(18, 25, 26, 0.78) 0%, rgba(10, 16, 15, 0.88) 100%) !important;
+  background-color: rgba(14, 21, 19, 0.84) !important;
+  background-image: none !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.36) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 26px !important;
+  padding: 0 !important;
+  margin-bottom: 24px !important;
+  box-shadow:
+    0 24px 60px -12px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+html body.theme-green3 .block_settings::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    transparent 15%,
+    rgba(255, 255, 255, 0.04) 45%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Matar la ola blanca gigante de theme/degrade en .block_settings .header */
+html body.theme-green3 .block_settings .header,
+html body.theme-green3 #inst25 .header {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+html body.theme-green3 .block_settings .header::before,
+html body.theme-green3 .block_settings .header::after,
+html body.theme-green3 #inst25 .header::before,
+html body.theme-green3 #inst25 .header::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+}
+
+html body.theme-green3 .block_settings .header .title,
+html body.theme-green3 .block_settings .header .block_action,
+html body.theme-green3 .block_settings .header h2 {
+  display: none !important;
+}
+
+html body.theme-green3 .block_settings.unalm-collapsed .content {
+  display: none !important;
+}
+
+/* Eliminar el rectángulo blanco de #settingsnav y ajustar enlaces */
+html body.theme-green3 .block_settings .content,
+html body.theme-green3 #inst25 .content,
+html body.theme-green3 #settingsnav,
+html body.theme-green3 .block_settings .block_tree_box,
+html body.theme-green3 .block_settings .block_tree,
+html body.theme-green3 .block_settings ul,
+html body.theme-green3 .block_settings li,
+html body.theme-green3 .block_settings .tree_item {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html body.theme-green3 .block_settings .content {
+  padding: 16px !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+html body.theme-green3 #settingsnav {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+html body.theme-green3 #settingsnav ul.block_tree,
+html body.theme-green3 #settingsnav ul[role="group"] {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+html body.theme-green3 #settingsnav .root_node {
+  margin: 0 0 6px 0 !important;
+  padding: 0 !important;
+}
+
+html body.theme-green3 #settingsnav .root_node > span,
+html body.theme-green3 .block_settings .unalm-nav-section-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: #7fe8c8 !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+  padding: 4px 6px 6px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  margin-bottom: 6px !important;
+}
+
+html body.theme-green3 #settingsnav li.type_setting p.tree_item,
+html body.theme-green3 #settingsnav li.type_custom p.tree_item {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.theme-green3 #settingsnav li.type_custom p.tree_item > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 12px !important;
+  margin-bottom: 4px !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #94a3b8 !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+}
+
+html body.theme-green3 #settingsnav li.type_setting p.tree_item a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 10px 14px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #e2e8f0 !important;
+  font-size: 0.84rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+html body.theme-green3 #settingsnav li.type_setting p.tree_item a:hover {
+  background: rgba(31, 157, 119, 0.18) !important;
+  border-color: rgba(127, 232, 200, 0.42) !important;
+  color: #ffffff !important;
+  transform: translateX(2px) !important;
+}
+
+html body.theme-green3 #settingsnav li.current_branch p.tree_item a,
+html body.theme-green3 #settingsnav p.active_tree_node a {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.28) 0%, rgba(16, 94, 70, 0.34) 100%) !important;
+  border: 1px solid rgba(127, 232, 200, 0.45) !important;
+  border-top: 1px solid rgba(127, 232, 200, 0.65) !important;
+  color: #7fe8c8 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+}
+
+html body.theme-green3 .block_settings img.navicon {
+  display: none !important;
+}
+
+/* ============================================================
+   SECCIÓN 16: EDITOR DE ENTREGA (FILEMANAGER, MFORM Y FILEPICKER)
+   Elimina la caja blanca inferior de botones, el fondo blanco del
+   gestor de archivos y el recorte lateral del formulario mform
+   ============================================================ */
+
+/* Título principal de la tarea en editar entrega */
+html body#page-mod-assign-editsubmission #region-main h2 {
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  color: #ffffff !important;
+  margin-bottom: 16px !important;
+}
+
+/* Tarjeta Liquid Glass envolviendo .editsubmissionform / #mform1 */
+html body.theme-green3 #region-main .editsubmissionform,
+html body#page-mod-assign-editsubmission #region-main .editsubmissionform {
+  background: linear-gradient(155deg, rgba(18, 26, 24, 0.86) 0%, rgba(10, 16, 15, 0.94) 100%) !important;
+  background-color: rgba(14, 22, 20, 0.9) !important;
+  backdrop-filter: blur(26px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(185%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 24px !important;
+  padding: 24px 28px !important;
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 12px 0 24px 0 !important;
+}
+
+/* Limpiar fondos blancos y anchos heredados en formularios Moodle (.mform) */
+html body.theme-green3 .mform,
+html body.theme-green3 .mform fieldset,
+html body.theme-green3 .mform fieldset.hidden,
+html body.theme-green3 .mform .fitem,
+html body.theme-green3 .mform .fitemtitle,
+html body.theme-green3 .mform .felement,
+html body.theme-green3 .mform .fgroup,
+html body.theme-green3 .mform .fitem_actionbuttons,
+html body.theme-green3 #fgroup_id_buttonar,
+html body.theme-green3 .form-actions {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Corregir el diseño vertical en editar entrega para no comprimir ni recortar el FileManager */
+html body#page-mod-assign-editsubmission .mform .fitem_ffilemanager,
+html body.theme-green3 .mform .fitem_ffilemanager {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+html body#page-mod-assign-editsubmission .mform .fitem_ffilemanager .fitemtitle,
+html body.theme-green3 .mform .fitem_ffilemanager .fitemtitle {
+  float: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: left !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+html body#page-mod-assign-editsubmission .mform .fitem_ffilemanager .fitemtitle label,
+html body.theme-green3 .mform .fitem_ffilemanager .fitemtitle label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: #7fe8c8 !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  margin: 0 !important;
+}
+
+html body#page-mod-assign-editsubmission .mform .fitem_ffilemanager .felement.ffilemanager,
+html body.theme-green3 .mform .fitem_ffilemanager .felement.ffilemanager {
+  float: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  padding: 0 !important;
+}
+
+/* Barra de botones inferior (#fgroup_id_buttonar) — adiós rectángulo blanco */
+html body.theme-green3 #fgroup_id_buttonar,
+html body.theme-green3 .mform .fitem_actionbuttons {
+  margin-top: 22px !important;
+  padding-top: 18px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.09) !important;
+  width: 100% !important;
+}
+
+html body.theme-green3 #fgroup_id_buttonar .felement.fgroup,
+html body.theme-green3 .mform .fitem_actionbuttons .felement.fgroup {
+  float: none !important;
+  margin-left: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+}
+
+/* Botón secundario "Cancelar" en vidrio oscuro para diferenciarlo del botón principal "Guardar cambios" */
+html body.theme-green3 input.btn-cancel,
+html body.theme-green3 button.btn-cancel,
+html body.theme-green3 #id_cancel {
+  background: rgba(255, 255, 255, 0.07) !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
+  background-image: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
+  color: #e2e8f0 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28) !important;
+}
+
+html body.theme-green3 input.btn-cancel:hover,
+html body.theme-green3 button.btn-cancel:hover,
+html body.theme-green3 #id_cancel:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+  background-image: none !important;
+  border-color: rgba(255, 255, 255, 0.34) !important;
+  color: #ffffff !important;
+}
+
+/* --- GESTOR DE ARCHIVOS (.filemanager) --- */
+html body.theme-green3 .filemanager {
+  background: transparent !important;
+  border: none !important;
+  color: #e2e8f0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Texto de restricciones (Tamaño máximo / cantidad de archivos) */
+html body.theme-green3 .filemanager .fp-restrictions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-align: left !important;
+  white-space: normal !important;
+  font-size: 0.8rem !important;
+  line-height: 1.45 !important;
+  color: #94a3b8 !important;
+  margin: 0 0 12px 0 !important;
+  padding: 8px 12px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+html body.theme-green3 .filemanager .fp-restrictions .helptooltip img.iconhelp {
+  filter: invert(1) brightness(1.5) !important;
+  opacity: 0.75 !important;
+}
+
+/* Barra de herramientas superior (.fp-navbar) */
+html body.theme-green3 .filemanager .fp-navbar {
+  background: rgba(255, 255, 255, 0.04) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  background-image: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 18px 18px 0 0 !important;
+  padding: 10px 14px !important;
+  min-height: 0 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+html body.theme-green3 .filemanager .filemanager-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+html body.theme-green3 .filemanager .fp-navbar .fp-toolbar,
+html body.theme-green3 .filemanager .fp-navbar .fp-viewbar,
+html body.theme-green3 .filemanager .fp-toolbar,
+html body.theme-green3 .filemanager .fp-viewbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  float: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html body.theme-green3 .filemanager .fp-toolbar > div,
+html body.theme-green3 .filemanager .fp-toolbar .fp-btn-add,
+html body.theme-green3 .filemanager .fp-toolbar .fp-btn-mkdir,
+html body.theme-green3 .filemanager .fp-toolbar .fp-btn-download {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html body.theme-green3 .filemanager .fp-navbar .fp-toolbar a,
+html body.theme-green3 .filemanager .fp-navbar .fp-toolbar .fp-btn-add a,
+html body.theme-green3 .filemanager .fp-navbar .fp-toolbar .fp-btn-mkdir a,
+html body.theme-green3 .filemanager .fp-navbar .fp-toolbar .fp-btn-download a,
+html body.theme-green3 .filemanager .fp-navbar .fp-viewbar a,
+html body.theme-green3 .filemanager .fp-toolbar a,
+html body.theme-green3 .filemanager .fp-viewbar a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  background-image: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-radius: 10px !important;
+  color: #e2e8f0 !important;
+  box-shadow: none !important;
+  transition: all 0.2s ease !important;
+}
+
+html body.theme-green3 .filemanager .fp-navbar .fp-toolbar a:hover,
+html body.theme-green3 .filemanager .fp-navbar .fp-viewbar a:hover,
+html body.theme-green3 .filemanager .fp-toolbar a:hover,
+html body.theme-green3 .filemanager .fp-viewbar a:hover {
+  background: rgba(31, 157, 119, 0.24) !important;
+  background-color: rgba(31, 157, 119, 0.24) !important;
+  border-color: rgba(127, 232, 200, 0.52) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+html body.theme-green3 .filemanager .fp-navbar .fp-viewbar a.checked,
+html body.theme-green3 .filemanager .fp-viewbar a.checked {
+  background: rgba(31, 157, 119, 0.36) !important;
+  background-color: rgba(31, 157, 119, 0.36) !important;
+  border-color: rgba(127, 232, 200, 0.65) !important;
+  color: #7fe8c8 !important;
+  box-shadow: 0 0 12px rgba(31, 157, 119, 0.3) !important;
+}
+
+html body.theme-green3 .filemanager .fp-toolbar a img.icon,
+html body.theme-green3 .filemanager .fp-viewbar a img.icon {
+  filter: invert(1) brightness(1.85) !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+}
+
+.unalm-fm-tb-svg {
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+  pointer-events: none !important;
+}
+
+/* Barra de ruta (Archivos) */
+html body.theme-green3 .filemanager .fp-pathbar {
+  background: rgba(0, 0, 0, 0.26) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 10px !important;
+  padding: 6px 12px !important;
+  margin: 10px 0 0 0 !important;
+  min-height: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+html body.theme-green3 .filemanager .fp-pathbar .fp-path-folder {
+  background: none !important;
+  padding-left: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+html body.theme-green3 .filemanager .fp-pathbar .fp-path-folder a {
+  color: #7fe8c8 !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+/* Área de archivos y zona Drag & Drop */
+html body.theme-green3 .filemanager .filemanager-container,
+html body.theme-green3 .filemanager .fm-content-wrapper,
+html body.theme-green3 .filemanager .fp-content {
+  background: rgba(7, 13, 11, 0.62) !important;
+  background-color: rgba(7, 13, 11, 0.62) !important;
+  background-image: none !important;
+  color: #e2e8f0 !important;
+  box-shadow: none !important;
+}
+
+html body.theme-green3 .filemanager .filemanager-container {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: none !important;
+  border-radius: 0 0 18px 18px !important;
+  padding: 14px !important;
+  min-height: 210px !important;
+}
+
+html body.theme-green3 .filemanager .fp-content {
+  background: transparent !important;
+  border: none !important;
+  max-height: none !important;
+}
+
+html body.theme-green3 .filemanager .fm-empty-container,
+html body.theme-green3 .filemanager .dndupload-target {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1.5px dashed rgba(127, 232, 200, 0.28) !important;
+  border-radius: 14px !important;
+  color: #94a3b8 !important;
+}
+
+html body.theme-green3 .filemanager .dndupload-message {
+  color: #94a3b8 !important;
+  font-size: 0.86rem !important;
+}
+
+/* Tarjetas individuales de cada archivo enviado (.fp-iconview .fp-file) */
+html body.theme-green3 .filemanager .fp-iconview {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-file {
+  background: rgba(255, 255, 255, 0.04) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px !important;
+  padding: 14px 10px 12px !important;
+  margin: 0 !important;
+  width: 136px !important;
+  height: auto !important;
+  min-height: 142px !important;
+  position: relative !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.22s ease !important;
+  box-sizing: border-box !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-file:hover {
+  background: rgba(31, 157, 119, 0.16) !important;
+  border-color: rgba(127, 232, 200, 0.45) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-file > a:first-child {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-decoration: none !important;
+  width: 100% !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-file > a:first-child > div:first-child {
+  position: relative !important;
+  height: auto !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  order: 1 !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-thumbnail {
+  position: static !important;
+  margin: 0 auto !important;
+  background: rgba(0, 0, 0, 0.28) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  width: 96px !important;
+  height: 84px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-thumbnail img {
+  max-width: 64px !important;
+  max-height: 64px !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.unalm-fm-svg-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.unalm-fm-svg-icon svg {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-filename-field {
+  position: static !important;
+  order: 2 !important;
+  width: 100% !important;
+  margin-top: 8px !important;
+  background: transparent !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-filename-field,
+html body.theme-green3 .filemanager .fp-iconview .fp-filename {
+  background: transparent !important;
+  color: #f1f5f9 !important;
+  width: 100% !important;
+  max-width: 116px !important;
+  text-align: center !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-file .fp-contextmenu {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  z-index: 5 !important;
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 7px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #cbd5e1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-file .fp-contextmenu:hover {
+  background: rgba(31, 157, 119, 0.35) !important;
+  border-color: rgba(127, 232, 200, 0.55) !important;
+  color: #ffffff !important;
+}
+
+html body.theme-green3 .filemanager .fp-iconview .fp-file .fp-contextmenu img {
+  filter: invert(1) brightness(1.8) !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+
+/* Vista de detalles (tabla) y árbol en el gestor de archivos */
+html body.theme-green3 .filemanager .fp-tableview table,
+html body.theme-green3 .filemanager .yui3-datatable-table {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  border: none !important;
+}
+
+html body.theme-green3 .filemanager .yui3-datatable-header {
+  background: rgba(255, 255, 255, 0.05) !important;
+  background-image: none !important;
+  color: #7fe8c8 !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+html body.theme-green3 .filemanager .yui3-datatable-cell {
+  background: rgba(255, 255, 255, 0.02) !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+html body.theme-green3 .filemanager .yui3-datatable-even .yui3-datatable-cell {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+html body.theme-green3 .filemanager .fp-treeview .yui3-treeview-row,
+html body.theme-green3 .filemanager .fp-filename-icon a {
+  color: #e2e8f0 !important;
+}
+
+/* --- DIÁLOGOS MODALES YUI DE MOODLE (Editar archivo / Selector de archivos / Crear carpeta) --- */
+html body.theme-green3 .moodle-dialogue-base .moodle-dialogue-wrap.moodle-dialogue-content {
+  background: linear-gradient(155deg, rgba(16, 26, 23, 0.96) 0%, rgba(9, 15, 13, 0.98) 100%) !important;
+  background-color: rgba(12, 20, 18, 0.96) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8) !important;
+  color: #f1f5f9 !important;
+  overflow: hidden !important;
+}
+
+html body.theme-green3 .moodle-dialogue-base .moodle-dialogue .moodle-dialogue-hd {
+  background: rgba(255, 255, 255, 0.04) !important;
+  background-image: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
+  color: #ffffff !important;
+  padding: 14px 20px !important;
+  text-shadow: none !important;
+}
+
+html body.theme-green3 .moodle-dialogue-base .moodle-dialogue .moodle-dialogue-hd h3 {
+  color: #ffffff !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-size: 1rem !important;
+  margin: 0 !important;
+}
+
+html body.theme-green3 .moodle-dialogue-base .moodle-dialogue .moodle-dialogue-bd {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  padding: 18px 20px !important;
+}
+
+html body.theme-green3 .moodle-dialogue-base .closebutton {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  filter: invert(1) brightness(1.6) !important;
+}
+
+/* Selector de archivos (Subir archivo / Archivos recientes) */
+html body.theme-green3 .file-picker .fp-repo-area {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.09) !important;
+}
+
+html body.theme-green3 .file-picker .fp-repo a {
+  color: #cbd5e1 !important;
+  border-radius: 10px !important;
+  margin: 3px 6px !important;
+}
+
+html body.theme-green3 .file-picker .fp-repo.active a,
+html body.theme-green3 .file-picker .fp-repo a:hover {
+  background: rgba(31, 157, 119, 0.28) !important;
+  color: #ffffff !important;
+}
+
+html body.theme-green3 .file-picker .fp-repo-items,
+html body.theme-green3 .file-picker .fp-content,
+html body.theme-green3 .file-picker .fp-upload-form,
+html body.theme-green3 .fp-select,
+html body.theme-green3 .fp-mkdir-dlg,
+html body.theme-green3 .fp-dlg {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+}
+
+html body.theme-green3 .fp-select label,
+html body.theme-green3 .file-picker label,
+html body.theme-green3 .fp-select .fp-fileinfo,
+html body.theme-green3 .fp-mkdir-dlg label {
+  color: #cbd5e1 !important;
+}
+
+html body.theme-green3 .fp-select .fp-hr,
+html body.theme-green3 .file-picker .fp-hr {
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: transparent !important;
+}
+
+html body.theme-green3 .fp-select form > button {
+  margin: 4px 6px 4px 0 !important;
+  padding: 7px 14px !important;
+  min-height: 32px !important;
+  font-size: 0.8rem !important;
+}
+
+/* ============================================================
+   SECCIÓN 17: CALIFICACIONES (VISTA USUARIO / INFORME GENERAL)
+   Corrige pestañas nav-tabs blancas, bloques verticales de
+   column-leader, filas desalineadas e íconos opacos
+   ============================================================ */
+
+/* Título superior de sección en Calificaciones */
+html body.path-grade-report #region-main h2 {
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 1.55rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.015em !important;
+  margin: 0 0 12px 0 !important;
+}
+
+html body.path-grade-report #region-main .grade-navigation + br {
+  display: none !important;
+}
+
+/* Pestañas de navegación (.grade-navigation .nav-tabs) estilo Liquid Glass Pill */
+html body.theme-green3 .grade-navigation,
+html body.theme-green3 #region-main .nav-tabs {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+html body.theme-green3 .grade-navigation {
+  margin: 8px 0 18px 0 !important;
+}
+
+html body.theme-green3 .grade-navigation ul.nav.nav-tabs,
+html body.theme-green3 #region-main ul.nav.nav-tabs {
+  display: inline-flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 5px !important;
+  margin: 0 !important;
+  list-style: none !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+html body.theme-green3 .grade-navigation ul.nav-tabs > li,
+html body.theme-green3 #region-main ul.nav-tabs > li {
+  float: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+html body.theme-green3 .grade-navigation ul.nav-tabs > li > a,
+html body.theme-green3 #region-main ul.nav-tabs > li > a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 18px !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: #cbd5e1 !important;
+  font-size: 0.86rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  transition: all 0.2s ease !important;
+}
+
+html body.theme-green3 .grade-navigation ul.nav-tabs > li > a:hover,
+html body.theme-green3 #region-main ul.nav-tabs > li > a:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+html body.theme-green3 .grade-navigation ul.nav-tabs > li.active > a,
+html body.theme-green3 .grade-navigation ul.nav-tabs > li.active > a:hover,
+html body.theme-green3 .grade-navigation ul.nav-tabs > li.active > a:focus,
+html body.theme-green3 #region-main ul.nav-tabs > li.active > a {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.92) 0%, rgba(16, 94, 70, 0.96) 100%) !important;
+  background-color: rgba(31, 157, 119, 0.92) !important;
+  background-image: none !important;
+  border: 1px solid rgba(127, 232, 200, 0.45) !important;
+  border-top: 1px solid rgba(127, 232, 200, 0.72) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 16px rgba(31, 157, 119, 0.28) !important;
+}
+
+/* Tarjeta Liquid Glass contenedora de tabla de calificaciones */
+.unalm-grade-table-wrap {
+  width: 100% !important;
+  overflow-x: auto !important;
+  background: linear-gradient(155deg, rgba(16, 25, 23, 0.86) 0%, rgba(9, 15, 13, 0.94) 100%) !important;
+  background-color: rgba(12, 20, 18, 0.9) !important;
+  backdrop-filter: blur(26px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(185%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.26) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  padding: 6px !important;
+  margin-top: 6px !important;
+  box-sizing: border-box !important;
+}
+
+/* Reset limpio de table.user-grade y table.overview-grade */
+html body.theme-green3 table.user-grade,
+html body.theme-green3 table.overview-grade,
+html body.theme-green3 table.generaltable.user-grade,
+html body.theme-green3 table.generaltable.overview-grade {
+  width: 100% !important;
+  margin: 0 !important;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html body.theme-green3 table.user-grade tbody tr:empty {
+  display: none !important;
+}
+
+/* Anular bordes y fondos nativos de Moodle (b1t, b2b, oddd1, evend2, levelodd, leveleven) */
+html body.theme-green3 table.user-grade th,
+html body.theme-green3 table.user-grade td,
+html body.theme-green3 table.overview-grade th,
+html body.theme-green3 table.overview-grade td,
+html body.theme-green3 table.user-grade .b1t,
+html body.theme-green3 table.user-grade .b1b,
+html body.theme-green3 table.user-grade .b2b,
+html body.theme-green3 table.user-grade .b1l,
+html body.theme-green3 table.user-grade .b1r,
+html body.theme-green3 table.user-grade .b2t,
+html body.theme-green3 table.user-grade .b2l,
+html body.theme-green3 table.user-grade .b2r,
+html body.theme-green3 table.user-grade .levelodd,
+html body.theme-green3 table.user-grade .leveleven,
+html body.theme-green3 table.user-grade .oddd1,
+html body.theme-green3 table.user-grade .oddd2,
+html body.theme-green3 table.user-grade .evend2 {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Cabecera de columnas */
+html body.theme-green3 table.user-grade thead th,
+html body.theme-green3 table.overview-grade thead th {
+  background: rgba(255, 255, 255, 0.045) !important;
+  background-color: rgba(255, 255, 255, 0.045) !important;
+  color: #7fe8c8 !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  padding: 14px 12px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+}
+
+html body.theme-green3 table.user-grade thead th#itemname,
+html body.theme-green3 table.overview-grade thead th:first-child {
+  text-align: left !important;
+  padding-left: 16px !important;
+  border-top-left-radius: 16px !important;
+}
+
+html body.theme-green3 table.user-grade thead th:last-child,
+html body.theme-green3 table.overview-grade thead th:last-child {
+  border-top-right-radius: 16px !important;
+}
+
+/* Eliminar los pilares verticales oscuros/blancos de td.column-leader dejando una guía sutil */
+html body.theme-green3 table.user-grade td.column-leader {
+  width: 14px !important;
+  min-width: 14px !important;
+  max-width: 16px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html body.theme-green3 table.user-grade td.column-leader.level2 {
+  box-shadow: inset 2px 0 0 rgba(127, 232, 200, 0.16) !important;
+}
+
+/* Celdas de cuerpo unificadas */
+html body.theme-green3 table.user-grade tbody th,
+html body.theme-green3 table.user-grade tbody td:not(.column-leader),
+html body.theme-green3 table.overview-grade tbody th,
+html body.theme-green3 table.overview-grade tbody td {
+  padding: 12px 12px !important;
+  color: #e2e8f0 !important;
+  font-size: 0.86rem !important;
+  font-weight: 500 !important;
+  vertical-align: middle !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+html body.theme-green3 table.user-grade tbody th.column-itemname {
+  text-align: left !important;
+  color: #f8fafc !important;
+}
+
+html body.theme-green3 table.user-grade tbody td.itemcenter,
+html body.theme-green3 table.user-grade tbody td.column-weight,
+html body.theme-green3 table.user-grade tbody td.column-grade,
+html body.theme-green3 table.user-grade tbody td.column-range,
+html body.theme-green3 table.user-grade tbody td.column-percentage,
+html body.theme-green3 table.user-grade tbody td.column-contributiontocoursetotal {
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+/* Fila raíz del curso (Analisis de Regresion) */
+html body.theme-green3 table.user-grade tr.unalm-grade-root-row th.column-itemname {
+  background: linear-gradient(90deg, rgba(31, 157, 119, 0.22) 0%, rgba(16, 86, 64, 0.14) 100%) !important;
+  color: #ffffff !important;
+  font-family: 'Lexend', sans-serif !important;
+  font-size: 0.96rem !important;
+  font-weight: 700 !important;
+  padding: 13px 14px !important;
+  border-bottom: 1px solid rgba(127, 232, 200, 0.22) !important;
+}
+
+/* Filas de Categoría (EC1, EC2, TE, PC) */
+html body.theme-green3 table.user-grade tr.unalm-grade-cat-row th.column-itemname {
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: #7fe8c8 !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  padding: 11px 14px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Filas de ítems individuales (A1, A2, PC1, PC2...) con hover limpio sin cortes */
+html body.theme-green3 table.user-grade tr.unalm-grade-item-row th,
+html body.theme-green3 table.user-grade tr.unalm-grade-item-row td:not(.column-leader) {
+  background: rgba(255, 255, 255, 0.014) !important;
+  transition: background-color 0.18s ease !important;
+}
+
+html body.theme-green3 table.user-grade tr.unalm-grade-item-row:hover th,
+html body.theme-green3 table.user-grade tr.unalm-grade-item-row:hover td:not(.column-leader),
+html body.theme-green3 table.overview-grade tbody tr:hover th,
+html body.theme-green3 table.overview-grade tbody tr:hover td {
+  background: rgba(31, 157, 119, 0.11) !important;
+}
+
+/* Evitar que enlaces o spans en filas alternas se pinten con colores heredados inconsistentes */
+html body.theme-green3 table.user-grade .gradeitemheader,
+html body.theme-green3 table.user-grade .gradeitemheader a,
+html body.theme-green3 table.overview-grade tbody a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: #f1f5f9 !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+html body.theme-green3 table.user-grade tr.unalm-grade-total-row th,
+html body.theme-green3 table.user-grade tr.unalm-grade-total-row td:not(.column-leader),
+html body.theme-green3 table.user-grade th.baggt,
+html body.theme-green3 table.user-grade td.baggt {
+  background: rgba(15, 42, 33, 0.56) !important;
+  background-color: rgba(15, 42, 33, 0.56) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid rgba(127, 232, 200, 0.14) !important;
+}
+
+html body.theme-green3 table.user-grade tr.unalm-grade-course-total-row th,
+html body.theme-green3 table.user-grade tr.unalm-grade-course-total-row td:not(.column-leader) {
+  background: linear-gradient(90deg, rgba(31, 157, 119, 0.25) 0%, rgba(14, 74, 56, 0.3) 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 0.92rem !important;
+  border-top: 1px solid rgba(127, 232, 200, 0.35) !important;
+  border-bottom: none !important;
+}
+
+html body.theme-green3 table.user-grade .gradeitemdescription {
+  color: #94a3b8 !important;
+  font-size: 0.74rem !important;
+  font-weight: 400 !important;
+  margin-top: 3px !important;
+  margin-left: 26px !important;
+}
+
+/* Badges de íconos y notas dentro de calificaciones */
+.unalm-grade-icon-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 8px !important;
+  flex-shrink: 0 !important;
+  vertical-align: middle !important;
+  margin-right: 8px !important;
+}
+
+.unalm-grade-icon-badge.icon-folder {
+  background: rgba(31, 157, 119, 0.2) !important;
+  border: 1px solid rgba(127, 232, 200, 0.35) !important;
+  color: #7fe8c8 !important;
+}
+
+.unalm-grade-icon-badge.icon-sum {
+  background: rgba(16, 185, 129, 0.16) !important;
+  border: 1px solid rgba(52, 211, 153, 0.32) !important;
+  color: #6ee7b7 !important;
+}
+
+.unalm-grade-icon-badge.icon-mean {
+  background: rgba(56, 189, 248, 0.16) !important;
+  border: 1px solid rgba(125, 211, 252, 0.32) !important;
+  color: #7dd3fc !important;
+}
+
+.unalm-grade-icon-badge.icon-item {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #cbd5e1 !important;
+}
+
+.unalm-grade-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 3px 10px !important;
+  border-radius: 999px !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+}
+
+.unalm-grade-pill.grade-high {
+  background: rgba(16, 185, 129, 0.2) !important;
+  border: 1px solid rgba(110, 231, 183, 0.45) !important;
+  color: #6ee7b7 !important;
+}
+
+.unalm-grade-pill.grade-mid {
+  background: rgba(56, 189, 248, 0.16) !important;
+  border: 1px solid rgba(125, 211, 252, 0.4) !important;
+  color: #7dd3fc !important;
+}
+
+.unalm-grade-pill.grade-low {
+  background: rgba(244, 63, 94, 0.18) !important;
+  border: 1px solid rgba(253, 164, 175, 0.4) !important;
+  color: #fda4af !important;
+}
+
+.unalm-grade-empty-tag {
+  display: inline-block !important;
+  margin-top: 3px !important;
+  padding: 1px 7px !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #94a3b8 !important;
+  font-size: 0.7rem !important;
+  font-weight: 500 !important;
+}
+
+.unalm-grade-muted {
+  color: rgba(148, 163, 184, 0.52) !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================================
+   SECCIÓN 18: BARRA SUPERIOR DE VISTA Y MODO CUADRÍCULA ("MIS CURSOS")
+   Mantiene el aspecto actual intacto en modo Lista, y añade el
+   selector superior [Lista | Cuadrícula] + Buscador + Filtro.
+   ============================================================ */
+#frontpage-course-list .unalm-courses-toolbar {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 12px 0 18px 0 !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.unalm-view-switcher {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 3px !important;
+  gap: 4px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28) !important;
+}
+
+.unalm-view-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  min-width: 36px !important;
+  height: 32px !important;
+  padding: 0 10px !important;
+  border-radius: 9px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+  color: #94a3b8 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.unalm-view-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  transform: none !important;
+}
+
+.unalm-view-btn.is-active {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.9) 0%, rgba(15, 92, 69, 0.95) 100%) !important;
+  border: 1px solid rgba(127, 232, 200, 0.55) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(31, 157, 119, 0.35) !important;
+}
+
+.unalm-courses-search-wrap {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 1 220px !important;
+  max-width: 290px !important;
+  height: 38px !important;
+  padding: 0 12px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.22) !important;
+}
+
+.unalm-courses-search-wrap svg {
+  width: 15px !important;
+  height: 15px !important;
+  color: #7fe8c8 !important;
+  flex-shrink: 0 !important;
+  margin-right: 8px !important;
+}
+
+.unalm-courses-search-input {
+  width: 100% !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 100% !important;
+  color: #f8fafc !important;
+  font-size: 0.84rem !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.unalm-courses-search-input::placeholder {
+  color: rgba(203, 213, 225, 0.65) !important;
+}
+
+.unalm-courses-filter-wrap {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.unalm-courses-filter-label {
+  color: #cbd5e1 !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+}
+
+.unalm-courses-filter-select {
+  height: 38px !important;
+  padding: 0 14px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+  color: #f8fafc !important;
+  font-size: 0.83rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+.unalm-courses-filter-select option {
+  background-color: #0e1614 !important;
+  color: #f8fafc !important;
+}
+
+/* Elementos exclusivos de modo Cuadrícula: completamente ocultos en modo Lista */
+.coursebox .unalm-grid-cover,
+.coursebox .unalm-grid-code,
+.coursebox .unalm-grid-footer {
+  display: none !important;
+}
+
+/* --- MODO CUADRÍCULA (como segunda imagen) --- */
+#frontpage-course-list .courses.unalm-view-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+  align-items: stretch !important;
+}
+
+@media (max-width: 1120px) {
+  #frontpage-course-list .courses.unalm-view-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 680px) {
+  #frontpage-course-list .courses.unalm-view-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+#frontpage-course-list .courses.unalm-view-grid .paging {
+  grid-column: 1 / -1 !important;
+  margin-top: 6px !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  background: linear-gradient(155deg, rgba(18, 28, 25, 0.82) 0%, rgba(10, 17, 15, 0.92) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  min-height: 256px !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox.clearfix::after {
+  display: none !important;
+  content: none !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(127, 232, 200, 0.45) !important;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.55), 0 0 24px rgba(31, 157, 119, 0.16) !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox .unalm-grid-cover {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 118px !important;
+  overflow: hidden !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  flex-shrink: 0 !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox .unalm-grid-cover svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox .unalm-grid-badge {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  background: rgba(8, 15, 13, 0.72) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(127, 232, 200, 0.35) !important;
+  color: #7fe8c8 !important;
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox .unalm-grid-code {
+  display: block !important;
+  padding: 14px 16px 4px 16px !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  color: #94a3b8 !important;
+  letter-spacing: 0.03em !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox .info,
+#frontpage-course-list .courses.unalm-view-grid .coursebox > h3.coursename {
+  float: none !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 2px 16px 8px 16px !important;
+  margin: 0 !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox .moreinfo {
+  display: none !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox h3.coursename {
+  float: none !important;
+  width: 100% !important;
+  display: block !important;
+  font-size: 0.98rem !important;
+  line-height: 1.35 !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox > h3.coursename {
+  padding: 2px 16px 8px 16px !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox h3.coursename a {
+  color: #f8fafc !important;
+  text-decoration: none !important;
+  font-size: 0.98rem !important;
+  background-image: none !important;
+  padding-left: 0 !important;
+  display: inline-block !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox:hover h3.coursename a {
+  color: #7fe8c8 !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox .content {
+  display: none !important;
+}
+
+#frontpage-course-list .courses.unalm-view-grid .coursebox .unalm-grid-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  margin-top: auto !important;
+  padding: 10px 16px 14px 16px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.unalm-grid-prof {
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  color: #7fe8c8 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.unalm-grid-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+}
+
+.unalm-card-action-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  background-image: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #94a3b8 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  transition: all 0.18s ease !important;
+}
+
+.unalm-card-action-btn:hover {
+  background: rgba(31, 157, 119, 0.25) !important;
+  border-color: rgba(127, 232, 200, 0.5) !important;
+  color: #ffffff !important;
+  transform: none !important;
+}
+
+.unalm-card-action-btn.is-starred {
+  background: rgba(245, 158, 11, 0.2) !important;
+  border-color: rgba(251, 191, 36, 0.55) !important;
+  color: #fbbf24 !important;
+}
+
+.unalm-courses-empty {
+  grid-column: 1 / -1 !important;
+  padding: 28px 20px !important;
+  text-align: center !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px dashed rgba(255, 255, 255, 0.16) !important;
+  color: #94a3b8 !important;
+  font-size: 0.9rem !important;
+}
+
+/* ============================================================
+   19. MENSAJERÍA UNALM (#page-message-index / .messaging-area)
+   Rediseño completo Liquid Glass de dos columnas:
+     - Elimina fondos blancos/negros planos y borde azul de selección
+     - Convierte el nombre de contacto en cabecera limpia (no píldora)
+     - Burbujas de vidrio diferenciadas (entrantes y salientes)
+     - Pestañas inferiores y caja de respuesta escarchadas
+   ============================================================ */
+body#page-message-index #region-main h2,
+body.path-message #region-main h2 {
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 1.6rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  margin: 0 0 14px 0 !important;
+  letter-spacing: -0.01em !important;
+}
+
+body#page-message-index #page-header .page-header-image img,
+body.path-message #page-header .page-header-image img {
+  border-radius: 20px !important;
+  border: 2px solid rgba(127, 232, 200, 0.35) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45) !important;
+}
+
+.messaging-area-container {
+  margin-top: 4px !important;
+  margin-bottom: 28px !important;
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  background: linear-gradient(155deg, rgba(16, 25, 22, 0.86) 0%, rgba(8, 14, 12, 0.94) 100%) !important;
+  backdrop-filter: blur(26px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(185%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.62),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.messaging-area-container .messaging-area {
+  display: flex !important;
+  align-items: stretch !important;
+  height: 600px !important;
+  min-height: 520px !important;
+  border: none !important;
+  background: transparent !important;
+  color: #f1f5f9 !important;
+}
+
+/* --- COLUMNA IZQUIERDA: CONTACTOS Y BÚSQUEDA --- */
+.messaging-area-container .messaging-area .contacts-area {
+  width: 34% !important;
+  min-width: 245px !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-sizing: border-box !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .searchtextarea {
+  height: auto !important;
+  padding: 12px 14px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .searchtextarea input,
+.messaging-area-container .messaging-area .contacts-area .searchtextarea #searchtext {
+  width: 100% !important;
+  height: 38px !important;
+  padding: 0 14px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  background-image: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+  border-radius: 12px !important;
+  color: #f8fafc !important;
+  font-size: 0.84rem !important;
+  text-align: left !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .searchtextarea input::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .searchtextarea .searchfilterarea {
+  margin-top: 8px !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  background: rgba(31, 157, 119, 0.22) !important;
+  border: 1px solid rgba(127, 232, 200, 0.38) !important;
+  color: #7fe8c8 !important;
+  font-size: 0.78rem !important;
+  line-height: 1.4 !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .searchtextarea .searchfilterdelete img {
+  filter: brightness(0) invert(1) !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contacts {
+  flex: 1 1 auto !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 8px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contacts::-webkit-scrollbar,
+.messaging-area-container .messaging-area .messages-area .messages::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contacts::-webkit-scrollbar-track,
+.messaging-area-container .messaging-area .messages-area .messages::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contacts::-webkit-scrollbar-thumb,
+.messaging-area-container .messaging-area .messages-area .messages::-webkit-scrollbar-thumb {
+  background: rgba(127, 232, 200, 0.22) !important;
+  border-radius: 999px !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contacts .heading {
+  padding: 8px 10px 4px !important;
+  color: #7fe8c8 !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  margin-bottom: 4px !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact {
+  display: flex !important;
+  align-items: center !important;
+  gap: 11px !important;
+  height: auto !important;
+  min-height: 62px !important;
+  padding: 10px 12px !important;
+  margin-bottom: 6px !important;
+  border-radius: 15px !important;
+  background: rgba(255, 255, 255, 0.025) !important;
+  background-color: rgba(255, 255, 255, 0.025) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(127, 232, 200, 0.28) !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact.selected {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.28) 0%, rgba(14, 82, 62, 0.36) 100%) !important;
+  background-color: rgba(31, 157, 119, 0.28) !important;
+  border: 1px solid rgba(127, 232, 200, 0.45) !important;
+  border-top: 1px solid rgba(127, 232, 200, 0.7) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact .picture {
+  width: 42px !important;
+  height: 42px !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact .picture img {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 999px !important;
+  object-fit: cover !important;
+  border: 2px solid rgba(127, 232, 200, 0.38) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact .information {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact .information .name {
+  color: #f8fafc !important;
+  font-size: 0.86rem !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  margin-bottom: 3px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact .information .lastmessage {
+  color: #94a3b8 !important;
+  font-size: 0.76rem !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact.selected .information .lastmessage {
+  color: #d1fae5 !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact .unread-count-container {
+  flex-shrink: 0 !important;
+  width: auto !important;
+  line-height: normal !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .contact .unread-count-container .badge {
+  background: #1f9d77 !important;
+  color: #ffffff !important;
+  border-radius: 999px !important;
+  font-size: 0.7rem !important;
+  padding: 2px 7px !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .tabs {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  height: auto !important;
+  padding: 9px 10px !important;
+  background: rgba(11, 18, 16, 0.94) !important;
+  background-color: rgba(11, 18, 16, 0.94) !important;
+  border: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.09) !important;
+  flex-shrink: 0 !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .tabs .tab {
+  flex: 1 1 0 !important;
+  width: auto !important;
+  height: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  padding: 8px 10px !important;
+  margin: 0 !important;
+  border-radius: 11px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: #cbd5e1 !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .tabs .tab:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .tabs .tab.selected {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.28) 0%, rgba(14, 82, 62, 0.36) 100%) !important;
+  background-color: rgba(31, 157, 119, 0.28) !important;
+  border: 1px solid rgba(127, 232, 200, 0.45) !important;
+  color: #7fe8c8 !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .tabs .tab .tabimage {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: auto !important;
+  margin: 0 !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .tabs .tab .tabimage img.icon {
+  width: 15px !important;
+  height: 15px !important;
+  margin: 0 !important;
+  filter: brightness(0) invert(0.82) !important;
+}
+
+.messaging-area-container .messaging-area .contacts-area .tabs .tab.selected .tabimage img.icon {
+  filter: brightness(0) saturate(100%) invert(86%) sepia(26%) saturate(440%) hue-rotate(102deg) brightness(98%) contrast(92%) !important;
+}
+
+/* --- COLUMNA DERECHA: CONVERSACIÓN Y COMPOSITOR --- */
+.messaging-area-container .messaging-area .messages-area {
+  width: 66% !important;
+  flex: 1 1 auto !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: rgba(7, 12, 10, 0.55) !important;
+  border: none !important;
+  box-sizing: border-box !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header {
+  height: auto !important;
+  min-height: 62px !important;
+  padding: 12px 18px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  background-color: rgba(255, 255, 255, 0.035) !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .name-container {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.25 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .name-container .name {
+  margin: 0 !important;
+  line-height: 1.25 !important;
+  max-width: 100% !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .name-container .name button,
+.messaging-area-container .messaging-area .messages-area .messages-header .name-container .name .btn-link {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  color: #f8fafc !important;
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transform: none !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .name-container .name button:hover {
+  color: #7fe8c8 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .status {
+  margin: 0 !important;
+  line-height: 1.2 !important;
+  font-size: 0.74rem !important;
+  font-weight: 500 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .status .offline-text {
+  color: #94a3b8 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .status .online-text {
+  color: #7fe8c8 !important;
+  font-weight: 600 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .status:not(.online) .online-text {
+  display: none !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .status.online .offline-text {
+  display: none !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .actions button,
+.messaging-area-container .messaging-area .messages-area .messages-header .view-toggle button,
+.messaging-area-container .messaging-area .messages-area .messages-header .delete-all button {
+  background: rgba(255, 255, 255, 0.06) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  background-image: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+  border-radius: 10px !important;
+  padding: 6px 13px !important;
+  min-height: 32px !important;
+  height: auto !important;
+  color: #e2e8f0 !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .actions button:hover,
+.messaging-area-container .messaging-area .messages-area .messages-header .view-toggle button:hover {
+  background: rgba(31, 157, 119, 0.25) !important;
+  border-color: rgba(127, 232, 200, 0.45) !important;
+  color: #ffffff !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .delete-all button {
+  background: rgba(244, 63, 94, 0.14) !important;
+  border-color: rgba(244, 63, 94, 0.35) !important;
+  color: #fda4af !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages-header .delete-instructions {
+  color: #fde047 !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+}
+
+/* Área de historial de mensajes */
+.messaging-area-container .messaging-area .messages-area .messages {
+  flex: 1 1 auto !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  padding: 18px 20px !important;
+  background: radial-gradient(circle at 50% 0%, rgba(31, 157, 119, 0.08) 0%, transparent 65%) !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-sizing: border-box !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .blocktime {
+  display: table !important;
+  margin: 8px auto 16px auto !important;
+  padding: 4px 14px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
+  color: #94a3b8 !important;
+  font-size: 0.73rem !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .message {
+  margin: 0 0 10px 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  display: flex !important;
+  width: 100% !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .message .content {
+  float: none !important;
+  max-width: 78% !important;
+  min-width: 160px !important;
+  width: auto !important;
+  padding: 11px 15px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, transform 0.2s ease !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .message .content.left {
+  margin-right: auto !important;
+  background: rgba(255, 255, 255, 0.065) !important;
+  background-color: rgba(255, 255, 255, 0.065) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+  border-radius: 18px 18px 18px 6px !important;
+  color: #f1f5f9 !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28) !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .message .content.right {
+  margin-left: auto !important;
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.34) 0%, rgba(14, 82, 62, 0.44) 100%) !important;
+  background-color: rgba(31, 157, 119, 0.34) !important;
+  border: 1px solid rgba(127, 232, 200, 0.36) !important;
+  border-top: 1px solid rgba(127, 232, 200, 0.58) !important;
+  border-radius: 18px 18px 6px 18px !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.32) !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .message[aria-checked="true"] .content {
+  border-color: rgba(244, 63, 94, 0.75) !important;
+  box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.28) !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .message .content .text {
+  display: block !important;
+  color: inherit !important;
+  font-size: 0.9rem !important;
+  line-height: 1.48 !important;
+  word-break: break-word !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .message .content .text p {
+  margin: 0 0 5px 0 !important;
+  color: inherit !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .message .content .text p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .message .content .timesent {
+  display: block !important;
+  float: none !important;
+  text-align: right !important;
+  margin-top: 6px !important;
+  font-size: 0.7rem !important;
+  font-weight: 500 !important;
+  color: #94a3b8 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .messages .message .content.right .timesent {
+  color: #a7f3d0 !important;
+}
+
+/* Barra inferior de redacción */
+.messaging-area-container .messaging-area .messages-area .response {
+  height: auto !important;
+  min-height: 62px !important;
+  padding: 12px 16px !important;
+  background: rgba(11, 18, 16, 0.94) !important;
+  background-color: rgba(11, 18, 16, 0.94) !important;
+  border: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .response .message-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .response .message-box .message-text-container {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .response .message-box textarea,
+.messaging-area-container .messaging-area .messages-area .response .message-box textarea[data-region="send-message-txt"] {
+  width: 100% !important;
+  min-height: 40px !important;
+  max-height: 110px !important;
+  padding: 9px 14px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  background-image: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+  border-radius: 13px !important;
+  color: #f8fafc !important;
+  font-size: 0.88rem !important;
+  line-height: 1.4 !important;
+  resize: none !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .response .message-box textarea::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .response .message-box .send-button-container {
+  flex-shrink: 0 !important;
+  width: auto !important;
+  margin: 0 !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .response .message-box .send-button-container button,
+.messaging-area-container .messaging-area .messages-area .response .message-box [data-action="send-message"] {
+  background: linear-gradient(135deg, rgba(31, 157, 119, 0.94) 0%, rgba(15, 92, 69, 0.98) 100%) !important;
+  border: 1px solid rgba(127, 232, 200, 0.45) !important;
+  border-top: 1px solid rgba(127, 232, 200, 0.72) !important;
+  border-radius: 13px !important;
+  padding: 9px 20px !important;
+  min-height: 40px !important;
+  color: #ffffff !important;
+  font-size: 0.86rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 14px rgba(31, 157, 119, 0.22) !important;
+  cursor: pointer !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .response .message-box [data-action="send-message"]:hover {
+  background: linear-gradient(135deg, #24b488 0%, #157a5b 100%) !important;
+  border-color: rgba(127, 232, 200, 0.75) !important;
+}
+
+.messaging-area-container .messaging-area .messages-area .response .delete-confirmation button {
+  background: rgba(244, 63, 94, 0.22) !important;
+  border: 1px solid rgba(244, 63, 94, 0.48) !important;
+  border-radius: 12px !important;
+  padding: 8px 18px !important;
+  color: #fecdd3 !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+@media (max-width: 767px) {
+  .messaging-area-container .messaging-area {
+    height: auto !important;
+    min-height: 480px !important;
+  }
+  .messaging-area-container .messaging-area .contacts-area,
+  .messaging-area-container .messaging-area .messages-area {
+    width: 100% !important;
+  }
+  .messaging-area-container .messaging-area.hide-messages .messages-area {
+    display: none !important;
+  }
+  .messaging-area-container .messaging-area:not(.hide-messages) .contacts-area {
+    display: none !important;
+  }
+}
+
+
+
+

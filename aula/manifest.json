@@ -1,0 +1,21 @@
+{
+    "name": "Aula UNALM",
+    "version": "1.0",
+    "description": "Imagen nueva y renovada para el aula virtual de la UNALM. Aún está en desarrollo.",
+    "manifest_version": 3,
+    "author": "Anticuchozzz",
+    "content_scripts": [
+        {
+            "matches": ["https://aula.lamolina.edu.pe/*"],
+            "css": ["style.css"],
+            "js": ["content.js"],
+            "run_at": "document_end"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["fonts/*", "exterior.jpg"],
+            "matches": ["https://aula.lamolina.edu.pe/*"]
+        }
+    ]
+}
